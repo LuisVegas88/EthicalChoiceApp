@@ -1,0 +1,31 @@
+{
+  "name": "ethicalchoiceapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuisVegas88/EthicalChoiceApp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LuisVegas88/EthicalChoiceApp/issues"
+  },
+  "homepage": "https://github.com/LuisVegas88/EthicalChoiceApp#readme",
+  "dependencies": {
+    "base-64": "^1.0.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "global": "^4.4.0",
+    "mongodb": "^3.6.3",
+    "mysql": "^2.18.1",
+    "node-fetch": "^2.6.1"
+  }
+}
