@@ -19,6 +19,8 @@ const options = {
 	"httpOnly": true, // The cookie only accessible by the web server
 	"signed": true // Indicates if the cookie should be signed
 };
+const Facebook = require("./lib/OauthFacebook");
+const facebook = new Facebook();
 
 //////////MiddlewaresServer//////////////
 server.use(myPublicFiles);
@@ -29,6 +31,23 @@ server.use(cors());
 server.use(cors());
 server.use(cookieParser(SECRET));
 server.use(bodyParser.json());
+
+////////////////////////////////////////////VALIDATORS//////////////////////////////////////////////////////
+function EmailValidator(Email) {
+    let emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return emailRegex.test(Email);
+}
+
+function PasswordValidator(Password) {
+	let PasswordRegex = /^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{4,16}$/; 
+	//La contraseña debe tener al entre 4 y 16 caracteres, al menos un dígito, al menos una minúscula y al menos una mayúscula.Puede tener otros símbolos.
+    return PasswordRegex.test(Password);
+}
+
+function CredentialsValidator(Email, Password){
+    return (EmailValidator(Email) && PasswordValidator(Password));
+}
+
 
 ///////////////////////////////////////////////JWT//////////////////////////////////////////////////////////
 // const SECRET = crypto.randomBytes(80).toString("hex");
@@ -197,35 +216,21 @@ async function getGoogleUser(code) {
 /////////////////FACEBOOK///////////////////////////
 ///endpoints////
 server.get("/loginFacebook", (req, res) => {
-    console.log(process.env.ID_FACEBOOK)
-    const url = `https://www.facebook.com/v9.0/dialog/oauth?client_id=${process.env.ID_FACEBOOK}&redirect_uri=${"http://localhost:8888/loginFB"}&state=${crypto.randomBytes(16).toString("hex")}&Scope=pages_read_engagement`
-    res.redirect(url);
+   res.redirect(facebook.getRedirectUrl());
 });
 
-server.get("/loginFB", (req, res) => {
-    const {code} = req.query;
-    console.log(code);
-    fetch(`https://graph.facebook.com/v9.0/oauth/access_token?client_id=${process.env.ID_FACEBOOK}&redirect_uri=${"http://localhost:8888/loginFB"}&client_secret=${process.env.SECRET_FACEBOOK}&code=${code}`).then(res => res.json()).then(data => {
-        console.log(data);
-        if (data.access_token) {
-            const input_token = data.access_token;
-            const TOKEN = `${data.token_type} ${data.access_token}`;
-            fetch(`https://graph.facebook.com/oauth/access_token?client_id=${process.env.ID_FACEBOOK}&client_secret=${process.env.SECRET_FACEBOOK}&grant_type=client_credentials`).then(res => res.json()).then(data => {
-                const appToken = data.access_token;
-                fetch(`https://graph.facebook.com/debug_token?input_token=${input_token}&access_token=${appToken}`).then(res => res.json()).then(data => {
-                    console.log(data);
-                    const person_id = data.user_id
-                    fetch(`https://graph.facebook.com/v9.0/${person_id}/?access_token=${appToken}`).then(res => res.json()).then(data => {
-                        console.log(data)
-                        res.send(data)
-                    });
-                    // res.send(TOKEN);
-                }).catch(e => console.error(e));
-            });
-        }
-    }).catch(e => console.error(e));
-    // res.send(code);
-})
+server.get("/loginFB", async (req, res) => {
+
+	const Token = await (facebook.getOauthToken(req.query.code, req.query.state));
+    const data = await facebook.getUserInfo(Token, ["name", "email"])
+    
+	const {id, name, email} = data;
+	
+	res.send(data);
+
+    console.log("facebook data: " ,data);
+
+});
 
 /////////////////////////////////////////////////////////////////DATABASE MYSQL//////////////////////////////////////////////////////////////////////
 //////////////////////CONNECT SQL/////////////////////////////////////
@@ -254,29 +259,34 @@ server.post("/register", (req, res) => {
 	console.log(newUser);
 
     if(newUser.Name && newUser.Email && newUser.Password){
-        connection.query(`SELECT * FROM User WHERE Email = "${newUser.Email}";`, function (err, result){ 
-			console.log(result)
-            if(err){
-                console.log(err);
-                return;
-			}
-			
-			if (!result.length){//Si buscamos el email y da un array vacio =>registramos user
+		let validated = CredentialsValidator(newUser.Email, newUser.Password);
+		if(validated){
+			connection.query(`SELECT * FROM User WHERE Email = "${newUser.Email}";`, function (err, result){ 
+				console.log(result)
+				if(err){
+					console.log(err);
+					return;
+				}
 				
-                connection.query(`INSERT INTO User (Name,Password,Email,Avatar) VALUES ("${newUser.Name}","${newUser.Password}","${newUser.Email}","${newUser.Avatar}");`)
-				
-                const Payload = {
-                    "userName": newUser.Name,
-							"iat": new Date(),
-							"role": "User",
-							"ip": req.ip
-						};
-				
-				res.cookie("jwt", generateJWT(Payload),options).send({"msg": "New user has been created."});
-			}else{
-                res.send("User name or Email already exists")
-            }
-		})	
+				if (!result.length){//Si buscamos el email y da un array vacio =>registramos user
+					
+					connection.query(`INSERT INTO User (Name,Password,Email,Avatar) VALUES ("${newUser.Name}","${newUser.Password}","${newUser.Email}","${newUser.Avatar}");`)
+					
+					const Payload = {
+						"userName": newUser.Name,
+								"iat": new Date(),
+								"role": "User",
+								"ip": req.ip
+							};
+					
+					res.cookie("jwt", generateJWT(Payload),options).send({"msg": "New user has been created."});
+				}else{
+					res.send("User name or Email already exists")
+				}
+			})
+		}else{
+			res.send("Usuario o Contraseña NO válidos")
+		}	
 	}else{
 		res.send("Please, Complete Credentials");
 		connection.end();
