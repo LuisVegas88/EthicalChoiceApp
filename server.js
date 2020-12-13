@@ -142,7 +142,7 @@ server.get("/loginGoogle", (req, res) => {
 	res.redirect(getGoogleAuthURL());
 });
 
-server.get("/loginG", async (req, res) => {
+server.get("/login", async (req, res) => {
     console.log(req.query);
 	if (req.query.code) {
         const requestCode = req.query.code
@@ -150,7 +150,7 @@ server.get("/loginG", async (req, res) => {
         const userData = await getGoogleUser(req.query.code);
         console.log(userData);
         res.send(userData)
-        // res.redirect("/"); A nuestra pagina
+        // res.redirect("/"); A nuestra pagina de Perfil o favorito
         }else{
             res.send({"msg": "Error"});
         }
@@ -165,10 +165,6 @@ let GOOGLE_CLIENT_ID ="298704109696-uiv8f6d8j3bf84bevu7epha2o507dh5g.apps.google
 const oauth2Client = new google.auth.OAuth2(
 	GOOGLE_CLIENT_ID,
 	GOOGLE_CLIENT_SECRET,
-	/*id_token
-   * This is where Google will redirect the user after they
-   * give permission to your application
-   */
 	"http://localhost:8888/login"
 );
 function getGoogleAuthURL() {
@@ -295,7 +291,7 @@ server.post("/register", (req, res) => {
 	
 })
 ///LOGIN///
-server.post("/login", (req, res) => {
+server.post("/NormalLogin", (req, res) => {
 	 
 	let userLogin = req.body;
 
