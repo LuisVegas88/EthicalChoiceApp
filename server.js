@@ -323,7 +323,31 @@ server.post("/login", (req, res) => {
 		});
 	}
 });
+///SEARCHBAR PLANTEAMIENTO/// 
+//-----> HAY QUE REVISAR PORQUE TENGO MOVIDAS CON EL DB Y NO SÉ LA ESTRUCTURA. 
 
+server.get("/searchProducts", (req, res) => {
+	let products = req.query // ---> LO HE VISTO POR INTERNET PERO NO SÉ SI SERÁ ASÍ.
+	if (products === true) {
+		connection.query(`SELECT * FROM Productos`, (err, res) => {
+			if(err) {
+				return err;
+			} 
+
+			let queryResProduct= res[0];
+
+			if(queryResProduct === products){
+				const stockProducts = {
+					"marca":"",
+					"producto":"",
+					"detalles":""
+				};
+
+				res.send(stockProducts);
+			}
+		})
+	}
+});
 //////////////////////////////////////////////
 ////////LISTENING PORT/////////
 
