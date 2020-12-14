@@ -335,19 +335,47 @@ function SQLquery(string, options = {}) {
 	});
 }
 
-/// BUSCADOR PRODUCTOS ///
+///SEARCH PRODUCTS/// 
+
 server.get("/searchProducts", (req, res) => {
 	const {search, vegan, cruelty} = req.query;
-	SQLquery(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ? OR Category LIKE ? ) ${vegan ? "AND Vegan = 1" : ""} ${cruelty ? "AND Cruelty_free = 1" : ""}`, [search, search, search])
+	SQLquery(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ? OR Category LIKE ? ) ${vegan ? "AND Vegan = 1" : ""} ${cruelty ? "AND Cruelty_free = 1" : ""}  LIMIT 10`, [search, search, search])
 		.then(
 			(result)=>{
 				
-				console.log(result);
-				res.send(result)
+				const Product = result.map(product => {
+					return {
+						"Name" : product.Name,
+						"img": product.Picture,
+						"Brand": product.Brand
+					}
+				});
+				console.log(Product);
+				res.send(Product)
 			
 			})
 			connection.end();	
 })
+///SEARCH PRODUCT DETAILS///
+server.get("/searchProducts/Details",(req, res) => {
+	const {search} = req.query;
+	console.log({search})
+	SQLquery(`SELECT * FROM Products WHERE idProduct = ${search};`,[search])
+			.then((result)=>{
+					console.log(result)
+					const Product = {
+							"Name" : result[0].Name,
+							"img": result[0].Picture,
+							"Brand": result[0].Brand,
+							"Description": result[0].Description,
+							"Ingredients" : result[0].Ingredients
+					}
+					console.log(Product);
+					res.send(Product)
+			});
+	connection.end();					
+})
+				
 
 /// BUSCADOR HERBOLARIOS ///
 
