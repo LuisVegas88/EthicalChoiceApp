@@ -321,7 +321,7 @@ server.post("/NormalLogin", (req, res) => {
 		});
 	}
 });
-//////////////////QUERY/////////////////////////////////////////////-
+//////////////////PLANTILLA QUERY/////////////////////////////////////////////
 
 function SQLquery(string, options = {}) {
 	return new Promise((resolve, reject) => {
@@ -335,31 +335,7 @@ function SQLquery(string, options = {}) {
 	});
 }
 
-///SEARCH PRODUCTS/// 
-
-// server.get("/searchProducts/Vegan", (req, res) => {
-// 	SQLquery("SELECT * FROM Products WHERE Vegan = ?", [req.body.Vegan])
-// 		.then(
-// 			(result)=>{
-				
-// 				console.log(result);
-// 				res.send(result)
-			
-// 			})
-// 			connection.end();	
-// })
-// server.get("/searchProducts/Cruelty", (req, res) => {
-// 	SQLquery("SELECT * FROM Products WHERE Cruelty_free = ?", [req.body.Cruelty])
-// 		.then(
-// 			(result)=>{
-				
-// 				console.log(result);
-// 				res.send(result)
-			
-// 			})
-// 			connection.end();	
-// })
-
+/// BUSCADOR PRODUCTOS ///
 server.get("/searchProducts", (req, res) => {
 	const {search, vegan, cruelty} = req.query;
 	SQLquery(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ? OR Category LIKE ? ) ${vegan ? "AND Vegan = 1" : ""} ${cruelty ? "AND Cruelty_free = 1" : ""}`, [search, search, search])
@@ -373,18 +349,52 @@ server.get("/searchProducts", (req, res) => {
 			connection.end();	
 })
 
-// server.get("/searchProducts",(req,res) =>{
-// 		const Term = req.query
-// 		if()
-// 		SQLquery("SELECT * FROM Products WHERE Brand = ? OR Name = ? OR Category = ?",[Term,Term,Term])
-// 			.then(
-// 				(result)=>{
-// 					console.log(result);
-// 					res.send(result)
-// 				})
-// 		connection.end();
-	
-// })
+/// BUSCADOR HERBOLARIOS ///
+
+server.get("/searchRetailer", (req, res) => {
+	connection.query("SELECT * FROM Retailer", (err, result) => {
+		if(err) {
+			res.send(err);
+		}else {
+				const Retailer = result.map(retailer => {
+					return {
+						"Name": retailer.Name,
+						"Address": retailer.Address,
+						"Phone": retailer.Phone,
+						"Email": retailer.Email
+					}
+				});
+				res.send(Retailer);
+		}
+	})
+		connection.end();
+});
+
+///// PINCHA HERBOLARIO SALE LISTA PRODUCTOS ////
+
+server.get("/searchRetailer/Details", (req, res) => {
+	const search = req.query.search
+	connection.query(`SELECT p.Name, p.Brand, p.Category
+	FROM Retailer AS r JOIN
+	stocks ON r.idRetailer = s.id_Retailer 
+	JOIN Products AS p
+	ON p.idProduct = s.id_Product
+	WHERE r.idRetailer = ${search}`, (err, result) => {
+		if(err) {
+			res.send(err);
+		} else {
+			const products = result.map(products => {
+				return {
+					"Name": products.Name,
+					"Brand": products.Brand,
+					"Category": products.Category 
+				}
+			});
+
+			res.send(products);
+		}
+	})
+})
 
 
 //////////////////////////////////////////////
