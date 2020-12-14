@@ -337,32 +337,32 @@ function SQLquery(string, options = {}) {
 
 ///SEARCH PRODUCTS/// 
 
-server.get("/searchProducts/Vegan", (req, res) => {
-	SQLquery("SELECT * FROM Products WHERE Vegan = ?", [req.body.Vegan])
-		.then(
-			(result)=>{
+// server.get("/searchProducts/Vegan", (req, res) => {
+// 	SQLquery("SELECT * FROM Products WHERE Vegan = ?", [req.body.Vegan])
+// 		.then(
+// 			(result)=>{
 				
-				console.log(result);
-				res.send(result)
+// 				console.log(result);
+// 				res.send(result)
 			
-			})
-			connection.end();	
-})
-server.get("/searchProducts/Cruelty", (req, res) => {
-	SQLquery("SELECT * FROM Products WHERE Cruelty_free = ?", [req.body.Cruelty])
-		.then(
-			(result)=>{
+// 			})
+// 			connection.end();	
+// })
+// server.get("/searchProducts/Cruelty", (req, res) => {
+// 	SQLquery("SELECT * FROM Products WHERE Cruelty_free = ?", [req.body.Cruelty])
+// 		.then(
+// 			(result)=>{
 				
-				console.log(result);
-				res.send(result)
+// 				console.log(result);
+// 				res.send(result)
 			
-			})
-			connection.end();	
-})
+// 			})
+// 			connection.end();	
+// })
 
 server.get("/searchProducts", (req, res) => {
 	const {search, vegan, cruelty} = req.query;
-	SQLquery(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ?) ${vegan ? "AND Vegan = 1" : ""} ${cruelty ? "AND Cruelty_free = 1" : ""}`, [search, search])
+	SQLquery(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ? OR Category LIKE ? ) ${vegan ? "AND Vegan = 1" : ""} ${cruelty ? "AND Cruelty_free = 1" : ""}`, [search, search, search])
 		.then(
 			(result)=>{
 				
