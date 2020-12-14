@@ -401,13 +401,10 @@ server.get("/searchRetailer", (req, res) => {
 ///// PINCHA HERBOLARIO SALE LISTA PRODUCTOS ////
 
 server.get("/searchRetailer/DetailsR", (req, res) => {
-	const search = req.query.search
-	connection.query(`SELECT p.Name, p.Brand, p.Category
-	FROM Retailer AS r JOIN
-	stocks ON r.idRetailer = s.id_Retailer 
-	JOIN Products AS p
-	ON p.idProduct = s.id_Product
-	WHERE r.idRetailer = ${search}`, (err, result) => {
+	const {search} = req.query
+	SQLquery(`SELECT p.Name, p.Brand, p.Category FROM Retailer AS r JOIN Stock AS s ON r.idRetailer = s.id_Retailer JOIN Products AS p ON p.idProduct = s.id_Product WHERE r.idRetailer = ${search}`, [search, search,search])
+	.then(
+	(err, result) => {
 		if(err) {
 			res.send(err);
 		} else {
@@ -421,6 +418,8 @@ server.get("/searchRetailer/DetailsR", (req, res) => {
 
 			res.send(products);
 		}
+
+		connection.end();
 	})
 })
 
