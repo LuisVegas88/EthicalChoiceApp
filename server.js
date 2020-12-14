@@ -356,7 +356,7 @@ server.get("/searchProducts", (req, res) => {
 			})
 			connection.end();	
 })
-
+///SEARCH PRODUCT DETAILS///
 server.get("/searchProducts/Details",(req, res) => {
 	const {search} = req.query;
 	console.log({search})
