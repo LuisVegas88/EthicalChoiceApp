@@ -372,7 +372,7 @@ server.get("/searchRetailer", (req, res) => {
 
 ///// PINCHA HERBOLARIO SALE LISTA PRODUCTOS ////
 
-server.get("/searchRetailer/Details", (req, res) => {
+server.get("/searchRetailer/DetailsR", (req, res) => {
 	const search = req.query.search
 	connection.query(`SELECT p.Name, p.Brand, p.Category
 	FROM Retailer AS r JOIN
