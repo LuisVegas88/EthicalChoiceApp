@@ -159,6 +159,8 @@ server.get("/login", async (req, res) => {
 });
 ///////////////
 const {google} = require("googleapis");
+const { query } = require("express");
+const { CLIENT_RENEG_WINDOW } = require("tls");
 
 let GOOGLE_CLIENT_SECRET="SXcyjROrUcPU3AaUSPCrCFF2";
 let GOOGLE_CLIENT_ID ="298704109696-uiv8f6d8j3bf84bevu7epha2o507dh5g.apps.googleusercontent.com";
@@ -296,7 +298,7 @@ server.post("/NormalLogin", (req, res) => {
 	let userLogin = req.body;
 
 	if(userLogin.Email && userLogin.Password){
-		connection.query(`SELECT * FROM User WHERE Email = "${userLogin.Email}";`, function (err, result){
+		connection.query(`SELECT * FROM User WHERE Email = "${userLogin.Email}";`,(err, result) => {
 			if(err){
 				console.log(err);
 				return;
@@ -306,7 +308,7 @@ server.post("/NormalLogin", (req, res) => {
 			if (queryResult && queryResult.Password === userLogin.Password){
 			
 				const Payload = {
-					"user": userLogin.Email,
+					"Email": userLogin.Email,
 					"iat": new Date(),
 					"role": "User",
 					"ip":req.ip
@@ -319,31 +321,72 @@ server.post("/NormalLogin", (req, res) => {
 		});
 	}
 });
-///SEARCHBAR PLANTEAMIENTO/// 
-//-----> HAY QUE REVISAR PORQUE TENGO MOVIDAS CON EL DB Y NO SÉ LA ESTRUCTURA. 
+//////////////////QUERY/////////////////////////////////////////////-
+
+function SQLquery(string, options = {}) {
+	return new Promise((resolve, reject) => {
+		connection.query(string, options, (err, response) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(response);
+			}
+		});
+	});
+}
+
+///SEARCH PRODUCTS/// 
+
+server.get("/searchProducts/Vegan", (req, res) => {
+	SQLquery("SELECT * FROM Products WHERE Vegan = ?", [req.body.Vegan])
+		.then(
+			(result)=>{
+				
+				console.log(result);
+				res.send(result)
+			
+			})
+			connection.end();	
+})
+server.get("/searchProducts/Cruelty", (req, res) => {
+	SQLquery("SELECT * FROM Products WHERE Cruelty_free = ?", [req.body.Cruelty])
+		.then(
+			(result)=>{
+				
+				console.log(result);
+				res.send(result)
+			
+			})
+			connection.end();	
+})
 
 server.get("/searchProducts", (req, res) => {
-	let products = req.query // ---> LO HE VISTO POR INTERNET PERO NO SÉ SI SERÁ ASÍ.
-	if (products === true) {
-		connection.query(`SELECT * FROM Productos`, (err, res) => {
-			if(err) {
-				return err;
-			} 
+	const {search, vegan, cruelty} = req.query;
+	SQLquery(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ?) ${vegan ? "AND Vegan = 1" : ""} ${cruelty ? "AND Cruelty_free = 1" : ""}`, [search, search])
+		.then(
+			(result)=>{
+				
+				console.log(result);
+				res.send(result)
+			
+			})
+			connection.end();	
+})
 
-			let queryResProduct= res[0];
+// server.get("/searchProducts",(req,res) =>{
+// 		const Term = req.query
+// 		if()
+// 		SQLquery("SELECT * FROM Products WHERE Brand = ? OR Name = ? OR Category = ?",[Term,Term,Term])
+// 			.then(
+// 				(result)=>{
+// 					console.log(result);
+// 					res.send(result)
+// 				})
+// 		connection.end();
+	
+// })
 
-			if(queryResProduct === products){
-				const stockProducts = {
-					"marca":"",
-					"producto":"",
-					"detalles":""
-				};
 
-				res.send(stockProducts);
-			}
-		})
-	}
-});
 //////////////////////////////////////////////
 ////////LISTENING PORT/////////
 

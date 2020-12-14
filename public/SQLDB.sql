@@ -19,18 +19,19 @@ CREATE TABLE IF NOT EXISTS `Retailer` (
 -- -----------------------------------------------------
 -- Table `ethicalchoice`.`Product`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Product` (
+CREATE TABLE IF NOT EXISTS `Products` (
   `idProduct` INT NOT NULL AUTO_INCREMENT,
   `Bar_code` INT NOT NULL,
-  `Name` VARCHAR(50) NULL,
-  `Vegan` BIT(1) NULL,
+  `Name` VARCHAR(50) NOT NULL,
+  `Vegan` BIT(1) NOT NULL,
   `Cruelty_free` BIT(1) NULL,
   `Quantity/unit` INT NULL,
   `Brand` VARCHAR(50) NULL,
   `Retailer` INT NOT NULL,
-  `URL` VARCHAR(255) NULL,
-  `Descrption` VARCHAR(255) NULL,
-  `Picture` LONGBLOB NULL,
+  `Category` VARCHAR(50) NULL,
+  `Description` VARCHAR(1000) NULL,
+  `Ingredients` VARCHAR(1000) NULL,
+  `Picture` VARCHAR(255) NULL,
 
   PRIMARY KEY (`idProduct`, `Retailer`),
   FOREIGN KEY (`Retailer`)
