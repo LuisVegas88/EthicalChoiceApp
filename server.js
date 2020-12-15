@@ -516,9 +516,23 @@ server.get("/Favs",(req,res)=>{
 	connection.end();
 })
 
+///Delete FAV////
 
-
-
+server.get("/DeleteFav", async (req, res)=>{
+	let {user,favid} = req.query;
+	SQLquery(`DELETE FROM Favs WHERE idUser = ? AND idFavs= ?`,[user,favid])
+		.then(
+			(err,result)=>{
+				if(err){
+					res.send(err);}
+				if(result){
+					res.send(result)
+					console.log("deleted")
+				}
+			})
+	connection.end();
+})
+			
 //////////////////////////////////////////////
 ////////LISTENING PORT/////////
 
