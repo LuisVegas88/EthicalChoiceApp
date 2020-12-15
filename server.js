@@ -249,7 +249,20 @@ connection.connect(function(err) {
 	console.log(`connected as id ${ connection.threadId}`);
 });
 
-//////////////////EndPoints SQL///////////////////
+//////////////////EndPoints SQL//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////PLANTILLA QUERY/////////////////////////////////////////////
+
+function SQLquery(string, options = {}) {
+	return new Promise((resolve, reject) => {
+		connection.query(string, options, (err, response) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(response);
+			}
+		});
+	});
+}
 ///REGISTER///
 server.post("/register", (req, res) => {
 
@@ -321,19 +334,6 @@ server.post("/NormalLogin", (req, res) => {
 		});
 	}
 });
-//////////////////PLANTILLA QUERY/////////////////////////////////////////////
-
-function SQLquery(string, options = {}) {
-	return new Promise((resolve, reject) => {
-		connection.query(string, options, (err, response) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(response);
-			}
-		});
-	});
-}
 
 ///SEARCH PRODUCTS/// 
 
@@ -358,7 +358,7 @@ server.get("/searchProducts", (req, res) => {
 })
 ///SEARCH PRODUCT DETAILS///
 server.get("/searchProducts/Details",(req, res) => {
-	const {search} = req.query;
+	// const {search} = req.query;
 	console.log({search})
 	SQLquery(`SELECT * FROM Products WHERE idProduct = ${search};`,[search])
 			.then((result)=>{
@@ -398,7 +398,7 @@ server.get("/searchRetailer", (req, res) => {
 		connection.end();
 });
 
-///// PINCHA HERBOLARIO SALE LISTA PRODUCTOS ////
+///LISTA DE PRODUCTOS DEL HERBOLARIO SELECCIONADO ///
 
 server.get("/searchRetailer/DetailsR", (req, res) => {
 	const {search} = req.query
@@ -422,6 +422,19 @@ server.get("/searchRetailer/DetailsR", (req, res) => {
 		connection.end();
 	})
 })
+
+////USER PROFILE///
+server.get("/User",(req, res) => {
+	const {search} = req.query;
+	SQLquery(`SELECT * FROM User WHERE Email = "${search}";`,[search])
+			.then((result)=>{
+					console.log(result)
+					res.send(result)
+			});
+	connection.end();					
+})
+	
+
 
 
 //////////////////////////////////////////////
