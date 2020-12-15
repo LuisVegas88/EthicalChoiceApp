@@ -404,9 +404,9 @@ server.get("/searchRetailer", (req, res) => {
 
 ///LISTA DE PRODUCTOS DEL HERBOLARIO SELECCIONADO ///
 
-server.get("/searchRetailer/DetailsR", (req, res) => {
+server.get("/searchRetailer/Products", (req, res) => {
 	const {search} = req.query
-	SQLquery(`SELECT p.Name, p.Brand, p.Category FROM Retailer AS r JOIN Stock AS s ON r.idRetailer = s.id_Retailer JOIN Products AS p ON p.idProduct = s.id_Product WHERE r.idRetailer = ${search}`, [search, search,search])
+	SQLquery(`SELECT p.Name, p.Brand, p.Category , p.Picture FROM Retailer AS r JOIN Stock AS s ON r.idRetailer = s.id_Retailer JOIN Products AS p ON p.idProduct = s.id_Product WHERE r.idRetailer = ?`,[search])
 	.then(
 	(err, result) => {
 		if(err) {
@@ -416,15 +416,15 @@ server.get("/searchRetailer/DetailsR", (req, res) => {
 				return {
 					"Name": products.Name,
 					"Brand": products.Brand,
-					"Category": products.Category 
+					"Category": products.Category,
+					"Picture":products.Picture
 				}
 			});
 
 			res.send(products);
 		}
-
-		connection.end();
 	})
+	connection.end();
 })
 
 ////USER PROFILE///
@@ -482,16 +482,39 @@ server.put("/User/Edit/:idUser",(req, res)=>{
 		}else{
 			res.send("User name or Email don't exists")
 		}	
-		}
-			
+		}connection.end();
 	})
+	
 
 	}	
 })
 	
 
 
-///FAVS LIST///
+///USER'S FAVS LIST //
+
+server.get("/Favs",(req,res)=>{
+	const {search} = req.query
+	SQLquery(`SELECT p.Name, p.Brand, p.Category, p.Picture FROM Products AS p JOIN Favs AS f ON f.idProduct = p.idProduct JOIN User AS u ON u.idUser= f.idUser WHERE u.idUser = ?`,[search])
+		.then(
+			(err,result)=>{
+				if(err){
+					res.send(err);
+				}else{
+					const favs = result.map(favs =>{
+						return {
+							"Name":favs.Name,
+							"Brand": favs.Brand, 
+							"Category": favs.Category,
+							"Picture": favs.Picture
+						}
+					});
+					res.send(favs)
+				}
+			}
+		)
+	connection.end();
+})
 
 
 
