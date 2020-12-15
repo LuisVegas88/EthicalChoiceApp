@@ -66,6 +66,7 @@ server.get("/jwt", (req, res) => {
 	res.cookie("jwt", JWT, {"httpOnly": true});
 	res.send("Hola Mundo");
 });
+
 /////todo OK¡(Comprobado)
 
 //FUNCIONES PARA CODIFICACION JWT  (front-end)
@@ -285,6 +286,9 @@ server.post("/register", (req, res) => {
 					
 					const Payload = {
 						"userName": newUser.Name,
+						"userPassword": newUser.Password,
+						"userEmail": newUser.Email,
+						"userAvatar":newUser.Avatar,
 								"iat": new Date(),
 								"role": "User",
 								"ip": req.ip
@@ -433,7 +437,62 @@ server.get("/User",(req, res) => {
 			});
 	connection.end();					
 })
+
+///EDIT USER PROFILE///	
+server.put("/User/Edit/:idUser",(req, res)=>{
+	const idUser = req.params.idUser;
+	console.log(idUser);
+	if(idUser){
+	connection.query(`SELECT * FROM User WHERE idUser = ${idUser};`,(err, result)=>{
+		if(err){
+			res.send(err);
+		}
+		if(result){
+			console.log(result);
+			const changes = req.body
+			const UserChange ={
+				"idUser": idUser,
+				"Name": changes.Name,
+				"Surname": changes.Surname, 
+				"Password": changes.Password, 
+				"Email": changes.Email,
+				"Avatar": changes.Avatar ? `"${changes.Avatar}"` : `NULL`
+			}
+		if(changes.Name && changes.Surname && changes.Password && changes.Email){
+			let validated = CredentialsValidator(changes.Email, changes.Password);
+			if(validated){
+
+				connection.query(`UPDATE User SET  Name = "${changes.Name}",Surname ="${changes.Surname}", Password ="${changes.Password}", Email ="${changes.Email}", Avatar = ${UserChange.Avatar} WHERE idUser = ${idUser};`)
+
+				const Payload = {
+				"userName": changes.Name,
+				"userSurname": changes.Surname,
+				"userPassword": changes.Password,
+				"userEmail": changes.Email,
+				"userAvatar":changes.Avatar,
+				"iat": new Date(),
+				"role": "User",
+				"ip": req.ip
+				};
+				res.cookie("jwt", generateJWT(Payload),options).send({"msg": "User has been changed."});
+			
+				}else{
+				res.send("User or password NOT valid");
+				}
+		}else{
+			res.send("User name or Email don't exists")
+		}	
+		}
+			
+	})
+
+	}	
+})
 	
+
+
+///FAVS LIST///
+
 
 
 
