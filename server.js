@@ -402,7 +402,7 @@ server.get("/searchRetailer", (req, res) => {
 
 server.get("/searchRetailer/DetailsR", (req, res) => {
 	const {search} = req.query
-	SQLquery(`SELECT p.Name, p.Brand, p.Category FROM Retailer AS r JOIN Stock AS s ON r.idRetailer = s.id_Retailer JOIN Products AS p ON p.idProduct = s.id_Product WHERE r.idRetailer = ${search}`, [search, search,search])
+	SQLquery(`SELECT p.Name, p.Brand, p.Category FROM Retailer AS r JOIN Stock AS s ON r.idRetailer = s.id_Retailer JOIN Products AS p ON p.idProduct = s.id_Product WHERE r.idRetailer = ?`, [search])
 	.then(
 	(err, result) => {
 		if(err) {
@@ -411,7 +411,7 @@ server.get("/searchRetailer/DetailsR", (req, res) => {
 			const products = result.map(products => {
 				return {
 					"Name": products.Name,
-					"Brand": products.Brand,
+					"Brand": products.Brand, 
 					"Category": products.Category 
 				}
 			});
