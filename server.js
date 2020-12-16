@@ -66,6 +66,7 @@ server.get("/jwt", (req, res) => {
 	res.cookie("jwt", JWT, {"httpOnly": true});
 	res.send("Hola Mundo");
 });
+
 /////todo OK¡(Comprobado)
 
 //FUNCIONES PARA CODIFICACION JWT  (front-end)
@@ -249,7 +250,20 @@ connection.connect(function(err) {
 	console.log(`connected as id ${ connection.threadId}`);
 });
 
-//////////////////EndPoints SQL///////////////////
+//////////////////EndPoints SQL//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////PLANTILLA QUERY/////////////////////////////////////////////
+
+function SQLquery(string, options = {}) {
+	return new Promise((resolve, reject) => {
+		connection.query(string, options, (err, response) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(response);
+			}
+		});
+	});
+}
 ///REGISTER///
 server.post("/register", (req, res) => {
 
@@ -272,6 +286,9 @@ server.post("/register", (req, res) => {
 					
 					const Payload = {
 						"userName": newUser.Name,
+						"userPassword": newUser.Password,
+						"userEmail": newUser.Email,
+						"userAvatar":newUser.Avatar,
 								"iat": new Date(),
 								"role": "User",
 								"ip": req.ip
@@ -321,19 +338,6 @@ server.post("/NormalLogin", (req, res) => {
 		});
 	}
 });
-//////////////////PLANTILLA QUERY/////////////////////////////////////////////
-
-function SQLquery(string, options = {}) {
-	return new Promise((resolve, reject) => {
-		connection.query(string, options, (err, response) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(response);
-			}
-		});
-	});
-}
 
 ///SEARCH PRODUCTS/// 
 
@@ -358,7 +362,7 @@ server.get("/searchProducts", (req, res) => {
 })
 ///SEARCH PRODUCT DETAILS///
 server.get("/searchProducts/Details",(req, res) => {
-	const {search} = req.query;
+	// const {search} = req.query;
 	console.log({search})
 	SQLquery(`SELECT * FROM Products WHERE idProduct = ${search};`,[search])
 			.then((result)=>{
@@ -398,11 +402,11 @@ server.get("/searchRetailer", (req, res) => {
 		connection.end();
 });
 
-///// PINCHA HERBOLARIO SALE LISTA PRODUCTOS ////
+///LISTA DE PRODUCTOS DEL HERBOLARIO SELECCIONADO ///
 
-server.get("/searchRetailer/DetailsR", (req, res) => {
+server.get("/searchRetailer/Products", (req, res) => {
 	const {search} = req.query
-	SQLquery(`SELECT p.Name, p.Brand, p.Category FROM Retailer AS r JOIN Stock AS s ON r.idRetailer = s.id_Retailer JOIN Products AS p ON p.idProduct = s.id_Product WHERE r.idRetailer = ?`, [search])
+	SQLquery(`SELECT p.Name, p.Brand, p.Category , p.Picture FROM Retailer AS r JOIN Stock AS s ON r.idRetailer = s.id_Retailer JOIN Products AS p ON p.idProduct = s.id_Product WHERE r.idRetailer = ?`,[search])
 	.then(
 	(err, result) => {
 		if(err) {
@@ -411,19 +415,142 @@ server.get("/searchRetailer/DetailsR", (req, res) => {
 			const products = result.map(products => {
 				return {
 					"Name": products.Name,
-					"Brand": products.Brand, 
-					"Category": products.Category 
+					"Brand": products.Brand,
+					"Category": products.Category,
+					"Picture":products.Picture
 				}
 			});
 
 			res.send(products);
 		}
-
-		connection.end();
 	})
+	connection.end();
 })
 
+////USER PROFILE///
+server.get("/User",(req, res) => {
+	const {search} = req.query;
+	SQLquery(`SELECT * FROM User WHERE Email = "${search}";`,[search])
+			.then((result)=>{
+					console.log(result)
+					res.send(result)
+			});
+	connection.end();					
+})
 
+///EDIT USER PROFILE///	
+server.put("/User/Edit/:idUser",(req, res)=>{
+	const idUser = req.params.idUser;
+	console.log(idUser);
+	if(idUser){
+	connection.query(`SELECT * FROM User WHERE idUser = ${idUser};`,(err, result)=>{
+		if(err){
+			res.send(err);
+		}
+		if(result){
+			console.log(result);
+			const changes = req.body
+			const UserChange ={
+				"idUser": idUser,
+				"Name": changes.Name,
+				"Surname": changes.Surname, 
+				"Password": changes.Password, 
+				"Email": changes.Email,
+				"Avatar": changes.Avatar ? `"${changes.Avatar}"` : `NULL`
+			}
+		if(changes.Name && changes.Surname && changes.Password && changes.Email){
+			let validated = CredentialsValidator(changes.Email, changes.Password);
+			if(validated){
+
+				connection.query(`UPDATE User SET  Name = "${changes.Name}",Surname ="${changes.Surname}", Password ="${changes.Password}", Email ="${changes.Email}", Avatar = ${UserChange.Avatar} WHERE idUser = ${idUser};`)
+
+				const Payload = {
+				"userName": changes.Name,
+				"userSurname": changes.Surname,
+				"userPassword": changes.Password,
+				"userEmail": changes.Email,
+				"userAvatar":changes.Avatar,
+				"iat": new Date(),
+				"role": "User",
+				"ip": req.ip
+				};
+				res.cookie("jwt", generateJWT(Payload),options).send({"msg": "User has been changed."});
+			
+				}else{
+				res.send("User or password NOT valid");
+				}
+		}else{
+			res.send("User name or Email don't exists")
+		}	
+		}connection.end();
+	})
+	
+
+	}	
+})
+	
+///U SER'S FAVS LIST //
+
+server.get("/Favs",(req,res)=>{
+	const {search} = req.query
+	SQLquery(`SELECT p.Name, p.Brand, p.Category, p.Picture FROM Products AS p JOIN Favs as f ON p.idProduct = f.idProduct WHERE f.idUser = ?`,[search])
+		.then(
+			(err,result)=>{
+				if(err){
+					res.send(err);
+				}else{
+					const favs = result.map(favs =>{
+						return {
+							"Name":favs.Name,
+							"Brand": favs.Brand, 
+							"Category": favs.Category,
+							"Picture": favs.Picture
+						}
+					});
+					res.send(favs)
+				}
+			}
+		)
+	connection.end();
+})
+
+///Delete FAV ////
+
+server.get("/DeleteFav", async (req, res)=>{
+	const {user,favid} = req.query;
+	SQLquery(`DELETE FROM Favs WHERE idUser = ? AND idProduct= ?`,[user,favid])
+		.then(
+			(err,result)=>{
+				if(err){
+					res.send(err);}
+				if(result){
+					res.send("Fav Deleted")
+				}
+			})
+	connection.end();
+})
+
+///SHOW USER'S FOLDERS FAVS///
+
+server.get("/ShowUserFolders", async (req,res)=>{
+	const {userid} = req.query;
+	SQLquery('SELECT * FROM FolderFavs WHERE idUser =?',[userid])
+		.then(
+			(err,result)=>{
+				if(err){
+					res.send(err);
+				}
+				if(result){
+					res.send(result);
+				}
+			})
+	connection.end();
+})
+
+// server.get("/ShowFolderContent", async (req,res)=>{
+// 	const {}
+// })
+			
 //////////////////////////////////////////////
 ////////LISTENING PORT/////////
 
