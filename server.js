@@ -489,8 +489,6 @@ server.put("/User/Edit/:idUser",(req, res)=>{
 	}	
 })
 	
-
-
 ///USER'S FAVS LIST //
 
 server.get("/Favs",(req,res)=>{
@@ -516,21 +514,41 @@ server.get("/Favs",(req,res)=>{
 	connection.end();
 })
 
-///Delete FAV////
+///Delete FAV ////
 
 server.get("/DeleteFav", async (req, res)=>{
-	let {user,favid} = req.query;
+	const {user,favid} = req.query;
 	SQLquery(`DELETE FROM Favs WHERE idUser = ? AND idFavs= ?`,[user,favid])
 		.then(
 			(err,result)=>{
 				if(err){
 					res.send(err);}
 				if(result){
-					res.send(result)
-					console.log("deleted")
+					res.send("Fav Deleted")
 				}
 			})
 	connection.end();
+})
+
+///SHOW USER'S FOLDERS FAVS///
+
+server.get("/ShowUserFolders", async (req,res)=>{
+	const {userid} = req.query;
+	SQLquery('SELECT * FROM FolderFavs WHERE idUser =?',[userid])
+		.then(
+			(err,result)=>{
+				if(err){
+					res.send(err);
+				}
+				if(result){
+					res.send(result);
+				}
+			})
+	connection.end();
+})
+
+server.get("/ShowFolderContent", async (req,res)=>{
+	const {}
 })
 			
 //////////////////////////////////////////////
