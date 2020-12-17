@@ -358,7 +358,7 @@ server.get("/searchProducts", (req, res) => {
 				res.send(Product)
 			
 			})
-			connection.end();	
+	connection.end();	
 })
 ///SEARCH PRODUCT DETAILS///
 server.get("/searchProducts/Details",(req, res) => {
@@ -547,9 +547,9 @@ server.get("/ShowUserFolders", async (req,res)=>{
 	connection.end();
 })
 
-server.get("/ShowFolderContent", async (req,res)=>{
-	const {}
-})
+// server.get("/ShowFolderContent", async (req,res)=>{
+// 	const {}
+// })
 			
 //////////////////////////////////////////////
 ////////LISTENING PORT/////////
