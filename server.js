@@ -489,11 +489,11 @@ server.put("/User/Edit/:idUser",(req, res)=>{
 	}	
 })
 	
-///USER'S FAVS LIST //
+///U SER'S FAVS LIST //
 
 server.get("/Favs",(req,res)=>{
 	const {search} = req.query
-	SQLquery(`SELECT p.Name, p.Brand, p.Category, p.Picture FROM Products AS p JOIN Favs AS f ON f.idProduct = p.idProduct JOIN User AS u ON u.idUser= f.idUser WHERE u.idUser = ?`,[search])
+	SQLquery(`SELECT p.Name, p.Brand, p.Category, p.Picture FROM Products AS p JOIN Favs as f ON p.idProduct = f.idProduct WHERE f.idUser = ?`,[search])
 		.then(
 			(err,result)=>{
 				if(err){
@@ -518,7 +518,7 @@ server.get("/Favs",(req,res)=>{
 
 server.get("/DeleteFav", async (req, res)=>{
 	const {user,favid} = req.query;
-	SQLquery(`DELETE FROM Favs WHERE idUser = ? AND idFavs= ?`,[user,favid])
+	SQLquery(`DELETE FROM Favs WHERE idUser = ? AND idProduct= ?`,[user,favid])
 		.then(
 			(err,result)=>{
 				if(err){
