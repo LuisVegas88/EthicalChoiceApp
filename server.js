@@ -148,15 +148,39 @@ server.get("/login", async (req, res) => {
 	if (req.query.code) {
         const requestCode = req.query.code
         if (requestCode){
-        const userData = await getGoogleUser(req.query.code);
-        console.log(userData);
-        res.send(userData)
-        // res.redirect("/"); A nuestra pagina de Perfil o favorito
-        }else{
+		const userData = await getGoogleUser(req.query.code)
+			if(userData){
+				// res.send(userData)
+				  console.log(userData);
+				  const{email,name,family_name,picture} = userData;
+				  const Validated = EmailValidator(email);
+				  if(Validated){
+					  connection.query(`SELECT * FROM User WHERE Email = "${email}";`, (err, result)=>{
+							if(err){
+								console.log(err);
+								return;
+							}
+							if(!result.length){//Si buscamos el email y da un array vacio =>registramos user)
+								connection.query(`INSERT INTO User (Name,Email,Avatar,Surname) VALUES ("${name}","${email}","${picture}","${family_name}")`)
+
+								const Payload = {
+									"User" : name,
+									"Email" : email,
+									"iat": new Date(),
+									"role": "User",
+									"ip": req.ip
+								};
+								res.cookie("jwt", generateJWT(Payload),options).send({"msg": "New user has been created."});
+							}else{
+								res.send("User name or Email already exists, please Login")
+							}
+						})
+					}
+			}
+		}
+    }else{
             res.send({"msg": "Error"});
         }
-
-	}
 });
 ///////////////
 const {google} = require("googleapis");
@@ -213,6 +237,7 @@ async function getGoogleUser(code) {
 	return null;
 	
 }
+
 /////////////////FACEBOOK///////////////////////////
 ///endpoints////
 server.get("/loginFacebook", (req, res) => {
@@ -280,7 +305,7 @@ server.post("/register", (req, res) => {
     if(newUser.Name && newUser.Email && newUser.Password){
 		let validated = CredentialsValidator(newUser.Email, newUser.Password);
 		if(validated){
-			connection.query(`SELECT * FROM User WHERE Email = "${newUser.Email}";`, function (err, result){ 
+			connection.query(`SELECT * FROM User WHERE Email = "${newUser.Email}";`, (err, result)=>{ 
 				console.log(result)
 				if(err){
 					console.log(err);
