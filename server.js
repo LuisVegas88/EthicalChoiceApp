@@ -253,7 +253,7 @@ connection.connect(function(err) {
 //////////////////EndPoints SQL//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////PLANTILLA QUERY/////////////////////////////////////////////
 
-function SQLquery(string, options = {}) {
+function  SQLquery(string, options = {}) {
 	return new Promise((resolve, reject) => {
 		connection.query(string, options, (err, response) => {
 			if (err) {
@@ -516,7 +516,7 @@ server.get("/Favs",(req,res)=>{
 
 ///Delete FAV ////
 
-server.get("/DeleteFav", async (req, res)=>{
+server.get("/DeleteFav", (req, res)=>{
 	const {user,favid} = req.query;
 	SQLquery(`DELETE FROM Favs WHERE idUser = ? AND idProduct= ?`,[user,favid])
 		.then(
@@ -547,10 +547,7 @@ server.get("/ShowUserFolders", async (req,res)=>{
 	connection.end();
 })
 
-// server.get("/ShowFolderContent", async (req,res)=>{
-// 	const {}
-// })
-			
+
 //////////////////////////////////////////////
 ////////LISTENING PORT/////////
 
