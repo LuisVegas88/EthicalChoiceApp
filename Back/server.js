@@ -560,13 +560,8 @@ server.get("/Favs",(req,res)=>{
 ///Delete FAV ////
 
 server.get("/DeleteFav", (req, res)=>{
-<<<<<<< HEAD
-	const {user,favid} = req.query;
-	SQLquery(`DELETE FROM Favs WHERE idUser = ? AND idProduct= ?`,[user,favid])
-=======
 	const {user,productid} = req.query;
 	SQLquery(`DELETE FROM Favs WHERE idUser = ? AND idProduct= ?`,[user,productid])
->>>>>>> 126d88da18e606a664ddece9a1cda151acce3f06
 		.then(
 			(result)=>{
 				if(result){
@@ -637,7 +632,22 @@ server.get("/DeleteFolderContent",(req,res)=>{
 				}
 			})
 		.catch(err=> res.send(err));
-})
+});
+
+
+/////// FIREBASE STORAGE //////
+  // Set the configuration for your app
+  // TODO: Replace with your app's config object
+  var firebaseConfig = {
+    apiKey:"AIzaSyCeLHZmyxbc5JCAT4-9BXoKceazdoJO4aY",
+    authDomain: "ethicalchoice.firebaseapp.com",
+    databaseURL: '<your-database-url>',
+    storageBucket: 'ethicalchoice.appspot.com'
+  };
+  firebase.initializeApp(firebaseConfig);
+
+  // Get a reference to the storage service, which is used to create references in your storage bucket
+  var storage = firebase.storage();
 
 //////////////////////////////////////////////
 ////////LISTENING PORT/////////

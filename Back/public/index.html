@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EthicalChoice App</title>
+    <script defer src="/public/searchBar.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="search">
+             <input type="search" id= "searchBar"class="searchTerm">
+        </div>
+        
+        <ul id="productsList"></ul>
+    
+    </div>
+
+<!-- FIREBASE CONNECTION -->
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyCeLHZmyxbc5JCAT4-9BXoKceazdoJO4aY",
+    authDomain: "ethicalchoice.firebaseapp.com",
+    projectId: "ethicalchoice",
+    storageBucket: "ethicalchoice.appspot.com",
+    messagingSenderId: "298704109696",
+    appId: "1:298704109696:web:8c151aad6a2e317713e665"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
+
+</body>
+</html>
