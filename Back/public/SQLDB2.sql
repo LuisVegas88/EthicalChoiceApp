@@ -318,6 +318,40 @@ ALTER TABLE `Stock`
   ADD CONSTRAINT `Stock_ibfk_2` FOREIGN KEY (`id_product`) REFERENCES `Products` (`idProduct`);
 COMMIT;
 
+--
+-- Tabla 'UserGoogle' --
+-- Modificación límite números --
+
+ALTER TABLE `ethicalChoice`.`UserGoogle` 
+DROP FOREIGN KEY `UserGoogle_ibfk_1`;
+ALTER TABLE `ethicalChoice`.`UserGoogle` 
+CHANGE COLUMN `idUser` `idUser` INT(50) NOT NULL DEFAULT '0' ;
+ALTER TABLE `ethicalChoice`.`UserGoogle` 
+ADD CONSTRAINT `UserGoogle_ibfk_1`
+  FOREIGN KEY (`idUser`)
+  REFERENCES `ethicalChoice`.`User` (`idUser`);
+
+--
+-- Tabla 'UserFacebook' --
+CREATE TABLE UserFacebook ( 
+  idUser INT NOT NULL DEFAULT 0, 
+  idFacebook INT(50) NOT NULL DEFAULT 0,  
+  PRIMARY KEY (idUser), 
+  FOREIGN KEY (idUser) REFERENCES User (idUser))
+
+--
+-- Tabla 'UserRegister' --
+CREATE TABLE UserRegister (
+idUser INT NOT NULL DEFAULT 0,
+Password VARCHAR(50) NOT NULL, 
+Salt VARCHAR (60) NOT NULL
+);
+-- Table 'UserRegister' Modify --
+ALTER TABLE `ethicalChoice`.`UserRegister` 
+DROP COLUMN `Salt`,
+CHANGE COLUMN `Password` `HashPass` VARCHAR(50) NOT NULL ;
+
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
