@@ -294,15 +294,15 @@ ALTER TABLE `Favs`
 -- Filtros para la tabla `Folder`
 --
 ALTER TABLE `Folder`
-  ADD CONSTRAINT `Folder_ibfk_1` FOREIGN KEY (`id_User`) REFERENCES `User` (`idUser`);
+  ADD CONSTRAINT `Folder_ibfk_1` FOREIGN KEY (`id_User`) REFERENCES `User` (`idUser`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `FolderFavs`
 --
 ALTER TABLE `FolderFavs`
-  ADD CONSTRAINT `FolderFavs_ibfk_1` FOREIGN KEY (`id_User`) REFERENCES `User` (`idUser`),
-  ADD CONSTRAINT `FolderFavs_ibfk_2` FOREIGN KEY (`id_Favs`) REFERENCES `Favs` (`idFavs`),
-  ADD CONSTRAINT `FolderFavs_ibfk_3` FOREIGN KEY (`id_Folder`) REFERENCES `Folder` (`idFolder`);
+  ADD CONSTRAINT `FolderFavs_ibfk_1` FOREIGN KEY (`id_User`) REFERENCES `User` (`idUser`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FolderFavs_ibfk_2` FOREIGN KEY (`id_Favs`) REFERENCES `Favs` (`idFavs`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FolderFavs_ibfk_3` FOREIGN KEY (`id_Folder`) REFERENCES `Folder` (`idFolder`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `Products`
@@ -314,8 +314,8 @@ ALTER TABLE `Products`
 -- Filtros para la tabla `Stock`
 --
 ALTER TABLE `Stock`
-  ADD CONSTRAINT `Stock_ibfk_1` FOREIGN KEY (`id_retailer`) REFERENCES `Retailer` (`idRetailer`),
-  ADD CONSTRAINT `Stock_ibfk_2` FOREIGN KEY (`id_product`) REFERENCES `Products` (`idProduct`);
+  ADD CONSTRAINT `Stock_ibfk_1` FOREIGN KEY (`id_retailer`) REFERENCES `Retailer` (`idRetailer`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Stock_ibfk_2` FOREIGN KEY (`id_product`) REFERENCES `Products` (`idProduct`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 --
@@ -329,7 +329,8 @@ CHANGE COLUMN `idUser` `idUser` INT(50) NOT NULL DEFAULT '0' ;
 ALTER TABLE `ethicalChoice`.`UserGoogle` 
 ADD CONSTRAINT `UserGoogle_ibfk_1`
   FOREIGN KEY (`idUser`)
-  REFERENCES `ethicalChoice`.`User` (`idUser`);
+  REFERENCES `ethicalChoice`.`User` (`idUser`)
+  ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Tabla 'UserFacebook' --
@@ -337,7 +338,7 @@ CREATE TABLE UserFacebook (
   idUser INT NOT NULL DEFAULT 0, 
   idFacebook INT(50) NOT NULL DEFAULT 0,  
   PRIMARY KEY (idUser), 
-  FOREIGN KEY (idUser) REFERENCES User (idUser))
+  FOREIGN KEY (idUser) REFERENCES User (idUser)) ON DELETE CASCADE ON UPDATE CASCADE
 
 --
 -- Tabla 'UserRegister' --
