@@ -64,7 +64,9 @@ CREATE TABLE `FolderFavs` (
   `idFoldFavs` int NOT NULL,
   `id_User` int NOT NULL DEFAULT '0',
   `id_Favs` int NOT NULL DEFAULT '0',
-  `id_Folder` int NOT NULL DEFAULT '0'
+  `id_Folder` int NOT NULL DEFAULT '0',
+
+  PRIMARY KEY (idFolderFavs);
 );
 
 -- --------------------------------------------------------

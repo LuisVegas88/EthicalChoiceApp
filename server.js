@@ -148,20 +148,45 @@ server.get("/login", async (req, res) => {
 	if (req.query.code) {
         const requestCode = req.query.code
         if (requestCode){
-        const userData = await getGoogleUser(req.query.code);
-        console.log(userData);
-        res.send(userData)
-        // res.redirect("/"); A nuestra pagina de Perfil o favorito
-        }else{
+		const userData = await getGoogleUser(req.query.code)
+			if(userData){
+				// res.send(userData)
+				  console.log(userData);
+				  const{email,name,family_name,picture} = userData;
+				  const Validated = EmailValidator(email);
+				  if(Validated){
+					  connection.query(`SELECT * FROM User WHERE Email = "${email}";`, (err, result)=>{
+							if(err){
+								console.log(err);
+								return;
+							}
+							if(!result.length){//Si buscamos el email y da un array vacio =>registramos user)
+								connection.query(`INSERT INTO User (Name,Email,Avatar,Surname) VALUES ("${name}","${email}","${picture}","${family_name}")`)
+
+								const Payload = {
+									"User" : name,
+									"Email" : email,
+									"iat": new Date(),
+									"role": "User",
+									"ip": req.ip
+								};
+								res.cookie("jwt", generateJWT(Payload),options).send({"msg": "New user has been created."});
+							}else{
+								res.send("User name or Email already exists, please Login")
+							}
+						})
+					}
+			}
+		}
+    }else{
             res.send({"msg": "Error"});
         }
-
-	}
 });
 ///////////////
 const {google} = require("googleapis");
 const { query } = require("express");
 const { CLIENT_RENEG_WINDOW } = require("tls");
+const { Server } = require("http");
 
 let GOOGLE_CLIENT_SECRET="SXcyjROrUcPU3AaUSPCrCFF2";
 let GOOGLE_CLIENT_ID ="298704109696-uiv8f6d8j3bf84bevu7epha2o507dh5g.apps.googleusercontent.com";
@@ -212,6 +237,7 @@ async function getGoogleUser(code) {
 	return null;
 	
 }
+
 /////////////////FACEBOOK///////////////////////////
 ///endpoints////
 server.get("/loginFacebook", (req, res) => {
@@ -241,20 +267,25 @@ let connection = mysql.createConnection({
 	"password" : process.env.PASSWORD_SQL,
 	"database" : process.env.DATABASE_SQL
 });
-connection.connect(function(err) {
-	if (err) {
-		console.error(`error connecting: ${ err.stack}`);
-		return;
-	}
 
-	console.log(`connected as id ${ connection.threadId}`);
-});
+function connect() {
+	connection.connect(function(err) {
+		if (err) {
+			console.error(`error connecting: ${ err.stack}`);
+			return;
+		}
+	
+		console.log(`connected as id ${ connection.threadId}`);
+	});
+	return connection;
+}
 
 //////////////////EndPoints SQL//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////PLANTILLA QUERY/////////////////////////////////////////////
 
 function  SQLquery(string, options = {}) {
 	return new Promise((resolve, reject) => {
+		const connection = connect();
 		connection.query(string, options, (err, response) => {
 			if (err) {
 				reject(err);
@@ -262,6 +293,7 @@ function  SQLquery(string, options = {}) {
 				resolve(response);
 			}
 		});
+		
 	});
 }
 ///REGISTER///
@@ -273,7 +305,7 @@ server.post("/register", (req, res) => {
     if(newUser.Name && newUser.Email && newUser.Password){
 		let validated = CredentialsValidator(newUser.Email, newUser.Password);
 		if(validated){
-			connection.query(`SELECT * FROM User WHERE Email = "${newUser.Email}";`, function (err, result){ 
+			connection.query(`SELECT * FROM User WHERE Email = "${newUser.Email}";`, (err, result)=>{ 
 				console.log(result)
 				if(err){
 					console.log(err);
@@ -339,11 +371,18 @@ server.post("/NormalLogin", (req, res) => {
 	}
 });
 
+///LOGOUT///
+
+server.get("/logout", (req, res) =>{
+    res.clearCookie(JWT);
+	res.redirect("http://localhost:3000"); ///Redigiria a la zona de React que queramos
+})
+
 ///SEARCH PRODUCTS/// 
 
 server.get("/searchProducts", (req, res) => {
-	const {search, vegan, cruelty} = req.query;
-	SQLquery(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ? OR Category LIKE ? ) ${vegan ? "AND Vegan = 1" : ""} ${cruelty ? "AND Cruelty_free = 1" : ""}  LIMIT 10`, [search, search, search])
+	const {search, vegan, cruelty, eco} = req.query;
+	SQLquery(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ? OR Category LIKE ? ) ${vegan ? "AND Vegan = 1" : ""} ${cruelty ? "AND Cruelty_free = 1" : ""} ${eco ? "AND Eco = 1" : ""}  LIMIT 10`, [search, search, search])
 		.then(
 			(result)=>{
 				
@@ -358,7 +397,8 @@ server.get("/searchProducts", (req, res) => {
 				res.send(Product)
 			
 			})
-			connection.end();	
+			.catch(err => res.send(err));
+	// connection.end();	
 })
 ///SEARCH PRODUCT DETAILS///
 server.get("/searchProducts/Details",(req, res) => {
@@ -376,8 +416,9 @@ server.get("/searchProducts/Details",(req, res) => {
 					}
 					console.log(Product);
 					res.send(Product)
-			});
-	connection.end();					
+			})
+			.catch(err => res.send(err));
+	// connection.end();					
 })
 				
 
@@ -406,17 +447,14 @@ server.get("/searchRetailer", (req, res) => {
 
 server.get("/searchRetailer/Products", (req, res) => {
 	const {search} = req.query
-	SQLquery(`SELECT p.Name, p.Brand, p.Category , p.Picture FROM Retailer AS r JOIN Stock AS s ON r.idRetailer = s.id_Retailer JOIN Products AS p ON p.idProduct = s.id_Product WHERE r.idRetailer = ?`,[search])
+	SQLquery(`SELECT p.Name, p.Brand, p.Picture FROM Retailer AS r JOIN Stock AS s ON r.idRetailer = s.id_Retailer JOIN Products AS p ON p.idProduct = s.id_Product WHERE r.idRetailer = ?`,[search])
 	.then(
-	(err, result) => {
-		if(err) {
-			res.send(err);
-		} else {
+	( result) => {
+		if(result) {
 			const products = result.map(products => {
 				return {
 					"Name": products.Name,
 					"Brand": products.Brand,
-					"Category": products.Category,
 					"Picture":products.Picture
 				}
 			});
@@ -424,18 +462,23 @@ server.get("/searchRetailer/Products", (req, res) => {
 			res.send(products);
 		}
 	})
-	connection.end();
+	.catch(err => res.send(err));
+	// connection.end();
 })
 
 ////USER PROFILE///
 server.get("/User",(req, res) => {
 	const {search} = req.query;
 	SQLquery(`SELECT * FROM User WHERE Email = "${search}";`,[search])
-			.then((result)=>{
+			.then(
+				(result)=>{
+					if(result){
 					console.log(result)
 					res.send(result)
-			});
-	connection.end();					
+					}
+			})
+			.catch(err => res.send(err));
+					
 })
 
 ///EDIT USER PROFILE///	
@@ -495,10 +538,8 @@ server.get("/Favs",(req,res)=>{
 	const {search} = req.query
 	SQLquery(`SELECT p.Name, p.Brand, p.Category, p.Picture FROM Products AS p JOIN Favs as f ON p.idProduct = f.idProduct WHERE f.idUser = ?`,[search])
 		.then(
-			(err,result)=>{
-				if(err){
-					res.send(err);
-				}else{
+			(result)=>{
+				if(result){
 					const favs = result.map(favs =>{
 						return {
 							"Name":favs.Name,
@@ -506,47 +547,97 @@ server.get("/Favs",(req,res)=>{
 							"Category": favs.Category,
 							"Picture": favs.Picture
 						}
+						
 					});
 					res.send(favs)
 				}
 			}
 		)
-	connection.end();
+		.catch(err => res.send(err));
+	
 })
 
 ///Delete FAV ////
 
 server.get("/DeleteFav", (req, res)=>{
+<<<<<<< HEAD
 	const {user,favid} = req.query;
 	SQLquery(`DELETE FROM Favs WHERE idUser = ? AND idProduct= ?`,[user,favid])
+=======
+	const {user,productid} = req.query;
+	SQLquery(`DELETE FROM Favs WHERE idUser = ? AND idProduct= ?`,[user,productid])
+>>>>>>> 126d88da18e606a664ddece9a1cda151acce3f06
 		.then(
-			(err,result)=>{
-				if(err){
-					res.send(err);}
+			(result)=>{
 				if(result){
 					res.send("Fav Deleted")
 				}
 			})
-	connection.end();
+		.catch(err => res.send(err));
+	
 })
 
-///SHOW USER'S FOLDERS FAVS///
+///SHOW USER'S FOLDERS FAVS names///
 
-server.get("/ShowUserFolders", async (req,res)=>{
+server.get("/ShowUserFolders",(req,res)=>{
 	const {userid} = req.query;
-	SQLquery('SELECT * FROM FolderFavs WHERE idUser =?',[userid])
+	SQLquery(`SELECT f.Name_Folder FROM Folder AS f JOIN UserFolder AS uf ON f.idFolder = uf.idFolder WHERE uf.idUser =?`,[userid])
 		.then(
-			(err,result)=>{
-				if(err){
-					res.send(err);
-				}
+			(result)=>{
 				if(result){
-					res.send(result);
+					res.send(result.map(folder => folder.Name_Folder));
 				}
 			})
-	connection.end();
+		.catch(err => res.send(err));
+	
 })
 
+///USER'S FOLDER CONTENT///
+
+server.get("/ShowFolderContent", (req,res)=>{
+	const {folder} = req.query
+	SQLquery(`SELECT p.Name, p.Brand, p.Picture FROM Products AS p JOIN Favs AS f ON p.idProduct = f.idProduct JOIN FolderFavs AS ff ON ff.idFavs=f.idFavs WHERE idFolder=?`,[folder])
+		.then(
+
+			(result)=>{
+				
+				if(result){
+
+					res.send(result)
+				}
+			})
+		
+		.catch(err => res.send(err));
+})
+
+///DELETE USER´S FOLDER///
+
+server.get("/DeleteFolder",(req,res)=>{
+	const{folder,user}=req.query
+	SQLquery(`DELETE FROM UserFolder WHERE idFolder=? AND idUser=?`,[folder,user])
+		.then(
+			(result)=>{
+				if(result){
+					res.send("Folder Deleted")
+				}
+			})
+		.catch(err=> res.send(err));
+
+})
+
+///DELETE FAV FROM USER'S CONTENT///
+
+server.get("/DeleteFolderContent",(req,res)=>{
+	const{idfav}=req.query
+	SQLquery(`DELETE FROM FolderFavs WHERE idFavs=?`,[idfav])
+		.then(
+			(result)=>{
+				if(result){
+					res.send("Fav Deleted from Folder")
+				}
+			})
+		.catch(err=> res.send(err));
+})
 
 //////////////////////////////////////////////
 ////////LISTENING PORT/////////
