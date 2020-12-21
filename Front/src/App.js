@@ -1,14 +1,14 @@
 import './App.css';
-import Register from './Components/Register'
-import Google from './Components/Google'
-import Facebook from './Components/Facebook'
+import Register from './Components/Register/Register';
+import Google from './Components/GoogleOAuth/Google';
+import FirebaseUpload from './Components/Firebase/fbStoreage/fbStorage.js';
 
 function App() {
   return (
     <div className="App">
       <Register />
       <Google />
-      <Facebook />
+      <FirebaseUpload />
     </div>
   );
 }

@@ -655,7 +655,9 @@ server.get("/DeleteFolderContent", (req, res) => {
 				}
 			})
 		.catch(err => res.send(err));
-})
+});
+
+
 
 //////////////////////////////////////////////
 ////////LISTENING PORT/////////
