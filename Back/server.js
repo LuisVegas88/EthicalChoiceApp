@@ -150,12 +150,12 @@ server.get("/loginG", async (req, res) => {
 				const { id, email, name, family_name, picture } = userData;
 				const Validated = EmailValidator(email);
 				if (Validated) {
+					let connection = openDB();
 					connection.query(`SELECT * FROM User WHERE Email = "${email}";`, (err, result) => {
 						if (err) {
-							console.log(err);
-							return;
+							throw eror
 						}
-						if (!result.length) {//Si buscamos el email y da un array vacio =>registramos user)
+						if (!result.length) {
 							connection.query(`INSERT INTO User (Name,Email,Avatar,Surname) VALUES (?, ?, ?, ?)`, [name, email, picture, family_name], (err, result) => {
 								if (err)
 									throw err;
@@ -178,7 +178,9 @@ server.get("/loginG", async (req, res) => {
 							res.send("User name or Email already exists, please Login")
 						}
 					})
+				connection.end();
 				}
+				
 			}
 		}
 	} else {
@@ -251,10 +253,16 @@ server.get("/loginFB", async (req, res) => {
 
 	const Token = await (facebook.getOauthToken(req.query.code, req.query.state));
 	const data = await facebook.getUserInfo(Token, ["name", "email"])
+	const { id, name, email } = userData;
+	const Validated = EmailValidator(email);
+	if(Validated){
+		connection.query(`SELECT * FROM User WHERE Email ="${email}"`,(err,result)=> {
+			if(err){
+				throw error
+			}
+		})
+	}
 
-	const { id, name, email } = data;
-
-	res.send(data);
 
 	console.log("facebook data: ", data);
 
@@ -310,10 +318,12 @@ server.post("/register", (req, res) => {
 	console.log(newUser);
 
 	if (newUser.Name && newUser.Email && newUser.Password && newUser.Surname) {
+		let connection = openDB();
 		let validated = CredentialsValidator(newUser.Email, newUser.Password);
 		if (validated) {
+			
 			connection.query(`SELECT idUser FROM User WHERE Email = "${newUser.Email}";`, (err, result) => {
-				console.log(result)
+				console.log(result);
 				if (err) {
 					console.log(err);
 					return;
@@ -350,10 +360,10 @@ server.post("/register", (req, res) => {
 		}
 	} else {
 		res.send("Please, Complete Credentials");
-		connection.end();
-
+		
+	connection.end();
 	}
-
+	
 })
 ///LOGIN///
 server.post("/Login", (req, res) => {
@@ -406,31 +416,37 @@ server.get("/logout", (req, res) => {
 
 server.get("/searchProducts", (req, res) => {
 	const { search, vegan, cruelty, eco } = req.query;
-	SQLquery(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ? OR Category LIKE ? ) ${vegan ? "AND Vegan = 1" : ""} ${cruelty ? "AND Cruelty_free = 1" : ""} ${eco ? "AND Eco = 1" : ""}  LIMIT 10`, [search, search, search])
-		.then(
-			(result) => {
-
-				const Product = result.map(product => {
-					return {
-						"Name": product.Name,
-						"img": product.Picture,
-						"Brand": product.Brand
-					}
-				});
-				console.log(Product);
-				res.send(Product)
-
-			})
-		.catch(err => res.send(err));
-	// connection.end();	
+	let connection = openDB();
+	connection.query(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ? OR Category LIKE ? ) ${vegan ? "AND Vegan = 1" : ""} ${cruelty ? "AND Cruelty_free = 1" : ""} ${eco ? "AND Eco = 1" : ""}  LIMIT 10`, [search, search, search],(err,result)=>{
+		if (err) {
+			res.send(err);
+		}
+		if(!result.length){
+			res.send("Producto No encontrado")
+		}
+		if (result.length){
+			const Product = result.map(product => {
+				return {
+					"Name": product.Name,
+					"img": product.Picture,
+					"Brand": product.Brand
+				}
+			});
+			console.log(Product);
+			res.send(Product)
+		}		
+	})
+	connection.end();
 })
 ///SEARCH PRODUCT DETAILS///
 server.get("/searchProducts/Details", (req, res) => {
-	// const {search} = req.query;
-	console.log({ search })
-	SQLquery(`SELECT * FROM Products WHERE idProduct = ${search};`, [search])
-		.then((result) => {
-			console.log(result)
+	const {search} = req.query;
+	let connection = openDB();
+	connection.query(`SELECT * FROM Products WHERE idProduct = ?;`, [search],(err,result)=>{
+		if (err) {
+			res.send(err);
+		}
+		if(result){
 			const Product = {
 				"Name": result[0].Name,
 				"img": result[0].Picture,
@@ -439,16 +455,17 @@ server.get("/searchProducts/Details", (req, res) => {
 				"Ingredients": result[0].Ingredients
 			}
 			console.log(Product);
-			res.send(Product)
-		})
-		.catch(err => res.send(err));
-	// connection.end();					
+			res.send(Product);
+		}
+	})
+	connection.end();				
 })
 
 
 /// BUSCADOR HERBOLARIOS ///
 
 server.get("/searchRetailer", (req, res) => {
+	let connection = openDB();
 	connection.query("SELECT * FROM Retailer", (err, result) => {
 		if (err) {
 			res.send(err);
@@ -470,73 +487,73 @@ server.get("/searchRetailer", (req, res) => {
 ///LISTA DE PRODUCTOS DEL HERBOLARIO SELECCIONADO ///
 
 server.get("/searchRetailer/Products", (req, res) => {
-	const { search } = req.query
-	SQLquery(`SELECT p.Name, p.Brand, p.Picture FROM Retailer AS r JOIN Stock AS s ON r.idRetailer = s.id_Retailer JOIN Products AS p ON p.idProduct = s.id_Product WHERE r.idRetailer = ?`, [search])
-		.then(
-			(result) => {
-				if (result) {
-					const products = result.map(products => {
-						return {
-							"Name": products.Name,
-							"Brand": products.Brand,
-							"Picture": products.Picture
-						}
-					});
-
-					res.send(products);
+	const { search } = req.query;
+	let connection = openDB();
+	connection.query(`SELECT p.Name, p.Brand, p.Picture FROM Retailer AS r JOIN Stock AS s ON r.idRetailer = s.id_Retailer JOIN Products AS p ON p.idProduct = s.id_Product WHERE r.idRetailer = ?`, [search],(err,result)=>{
+		if (err) {
+			res.send(err);
+		}
+		if (result) {
+			const products = result.map(products => {
+				return {
+					"Name": products.Name,
+					"Brand": products.Brand,
+					"Picture": products.Picture
 				}
-			})
-		.catch(err => res.send(err));
-	// connection.end();
+			});
+
+			res.send(products);
+		}
+	})
+	connection.end();
 })
 
 ////USER PROFILE///
 server.get("/User", (req, res) => {
 	const { search } = req.query;
-	SQLquery(`SELECT * FROM User WHERE Email = "${search}";`, [search])
-		.then(
-			(result) => {
-				if (result) {
-					console.log(result)
-					res.send(result)
-				}
-			})
-		.catch(err => res.send(err));
-
+	let connection = openDB();
+	connection.query(`SELECT * FROM User WHERE Email = ?;`, [search],(err,result)=>{
+		if (err) {
+			res.send(err);
+		}
+		if(result){
+			res.send(result);
+		}
+	})
+	connection.end();
 })
 
 ///EDIT USER PROFILE///	
-server.put("/User/Edit/:idUser", (req, res) => {
-	const idUser = req.params.idUser;
+server.put("/User/Edit/", (req, res) => {
+	const {idUser} = req.query;
 	console.log(idUser);
 	if (idUser) {
-		connection.query(`SELECT * FROM User WHERE idUser = ${idUser};`, (err, result) => {
+		let connection = openDB();
+		connection.query(`SELECT * FROM User WHERE idUser = ?;`, [idUser],(err, result) => {
 			if (err) {
 				res.send(err);
 			}
 			if (result) {
 				console.log(result);
-				const changes = req.body
+				const changes = req.body;
 				const UserChange = {
 					"idUser": idUser,
 					"Name": changes.Name,
 					"Surname": changes.Surname,
-					"Password": changes.Password,
 					"Email": changes.Email,
 					"Avatar": changes.Avatar ? `"${changes.Avatar}"` : `NULL`
 				}
-				if (changes.Name && changes.Surname && changes.Password && changes.Email) {
+				if (changes.Name && changes.Surname  && changes.Email) {
 					let validated = CredentialsValidator(changes.Email, changes.Password);
 					if (validated) {
-
-						connection.query(`UPDATE User SET  Name = "${changes.Name}",Surname ="${changes.Surname}", Password ="${changes.Password}", Email ="${changes.Email}", Avatar = ${UserChange.Avatar} WHERE idUser = ${idUser};`)
+						connection = openDB();
+						connection.query(`UPDATE User SET  Name = "${changes.Name}",Email ="${changes.Email}",Avatar = ${UserChange.Avatar},Surname ="${changes.Surname}" WHERE idUser = ${idUser};`)
 
 						const Payload = {
 							"userName": changes.Name,
-							"userSurname": changes.Surname,
-							"userPassword": changes.Password,
 							"userEmail": changes.Email,
 							"userAvatar": changes.Avatar,
+							"userSurname": changes.Surname,
 							"iat": new Date(),
 							"role": "User",
 							"ip": req.ip
@@ -547,115 +564,113 @@ server.put("/User/Edit/:idUser", (req, res) => {
 						res.send("User or password NOT valid");
 					}
 				} else {
-					res.send("User name or Email don't exists")
+					res.send("User name or Email don't exists");
 				}
-			} connection.end();
+			} 
 		})
-
-
+		connection.end();
 	}
 })
 
 ///U SER'S FAVS LIST //
 
 server.get("/Favs", (req, res) => {
-	const { search } = req.query
-	SQLquery(`SELECT p.Name, p.Brand, p.Category, p.Picture FROM Products AS p JOIN Favs as f ON p.idProduct = f.idProduct WHERE f.idUser = ?`, [search])
-		.then(
-			(result) => {
-				if (result) {
-					const favs = result.map(favs => {
-						return {
-							"Name": favs.Name,
-							"Brand": favs.Brand,
-							"Category": favs.Category,
-							"Picture": favs.Picture
-						}
-
-					});
-					res.send(favs)
-				}
-			}
-		)
-		.catch(err => res.send(err));
-
+	const { search } = req.query;
+	let connection = openDB();
+	connection.query(`SELECT p.Name, p.Brand, p.Category, p.Picture FROM Products AS p JOIN Favs as f ON p.idProduct = f.idProduct WHERE f.idUser = ?`, [search],(err,result)=>{
+		if (err) {
+			res.send(err);
+		}
+		if(result){
+			res.send(result);
+		}
+	})
+	connection.end();
 })
 
 ///Delete FAV ////
 
 server.get("/DeleteFav", (req, res) => {
-	const { user, productid } = req.query;
-	SQLquery(`DELETE FROM Favs WHERE idUser = ? AND idProduct= ?`, [user, productid])
-		.then(
-			(result) => {
-				if (result) {
-					res.send("Fav Deleted")
-				}
-			})
-		.catch(err => res.send(err));
-
+	const { idfav } = req.query;
+	let connection = openDB();
+	connection.query(`DELETE FROM Favs WHERE idFavs=?`, [idfav],(err,result)=>{
+		if (err) {
+			res.send(err);
+		}
+		if(result){
+			res.send("Fav Deleted")
+		}
+	})
+	connection.end();
 })
 
 ///SHOW USER'S FOLDERS FAVS names///
 
 server.get("/ShowUserFolders", (req, res) => {
 	const { userid } = req.query;
-	SQLquery(`SELECT f.Name_Folder FROM Folder AS f JOIN UserFolder AS uf ON f.idFolder = uf.idFolder WHERE uf.idUser =?`, [userid])
-		.then(
-			(result) => {
-				if (result) {
-					res.send(result.map(folder => folder.Name_Folder));
-				}
-			})
-		.catch(err => res.send(err));
-
+	let connection = openDB();
+	connection.query(`SELECT f.Name_Folder FROM Folder AS f JOIN UserFolder AS uf ON f.idFolder = uf.idFolder WHERE uf.idUser =?`, [userid],(err,result)=>{
+		if (err) {
+			res.send(err);
+		}
+		if (result){
+			res.send(result.map(folder => folder.Name_Folder));
+		}
+	})
+	connection.end();
 })
 
 ///USER'S FOLDER CONTENT///
 
 server.get("/ShowFolderContent", (req, res) => {
-	const { folder } = req.query
-	SQLquery(`SELECT p.Name, p.Brand, p.Picture FROM Products AS p JOIN Favs AS f ON p.idProduct = f.idProduct JOIN FolderFavs AS ff ON ff.idFavs=f.idFavs WHERE idFolder=?`, [folder])
-		.then(
-
-			(result) => {
-
-				if (result) {
-
-					res.send(result)
-				}
-			})
-
-		.catch(err => res.send(err));
+	const { folder } = req.query;
+	let connection = openDB();
+	connection.query(`SELECT p.Name, p.Brand, p.Picture FROM Products AS p JOIN Favs AS f ON p.idProduct = f.idProduct JOIN FolderFavs AS ff ON ff.idFavs=f.idFavs WHERE idFolder=?`, [folder],(err,result)=>{
+		if (err) {
+			res.send(err);
+		}
+		if (result){
+			res.send(result);
+		}
+	})
+	connection.end();
 })
 
 ///DELETE USER´S FOLDER///
 
 server.get("/DeleteFolder", (req, res) => {
 	const { folder, user } = req.query
-	SQLquery(`DELETE FROM UserFolder WHERE idFolder=? AND idUser=?`, [folder, user])
-		.then(
-			(result) => {
-				if (result) {
-					res.send("Folder Deleted")
-				}
-			})
-		.catch(err => res.send(err));
-
+	let connection = openDB();
+	connection.query(`DELETE FROM UserFolder WHERE idFolder=? AND idUser=?`, [folder, user],(err,result)=>{
+		if (err) {
+			res.send(err);
+		}
+		if(result.affectedRows===0){
+			res.send("Folder NOT exist");
+		}else{
+			res.send("Folder Deleted");
+		}
+	})
+	connection.end();
 })
 
 ///DELETE FAV FROM USER'S CONTENT///
 
 server.get("/DeleteFolderContent", (req, res) => {
 	const { idfav } = req.query
-	SQLquery(`DELETE FROM FolderFavs WHERE idFavs=?`, [idfav])
-		.then(
-			(result) => {
-				if (result) {
-					res.send("Fav Deleted from Folder")
-				}
-			})
-		.catch(err => res.send(err));
+
+	let connection = openDB();
+	connection.query(`DELETE FROM FolderFavs WHERE idFavs=?`, [idfav], (err,result)=>{
+		if (err) {
+			res.send(err);
+		}
+		if (result.affectedRows===0){
+			res.send("This Fav NOT exit");
+		}else{
+			res.send("Fav Deleted from Folder");
+		}		
+	})
+	connection.end();
 });
 
 //// UPLOAD PROFILE IMAGE TO FB AND DB ////
