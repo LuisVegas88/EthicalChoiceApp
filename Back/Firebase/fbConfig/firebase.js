@@ -1,6 +1,6 @@
-import firebase from "firebase/app";
-import "firebase/firebase-auth";
-import "firebase/storage";
+const firebase = require("firebase/app");
+require("firebase/firebase-auth");
+require("firebase/storage");
 
 const firebaseConfig = {
     apiKey: "AIzaSyCeLHZmyxbc5JCAT4-9BXoKceazdoJO4aY",
@@ -17,6 +17,5 @@ const storage = firebase.storage();
 
 const auth = firebase.auth();
 
-export {storage, auth};
-export default firebase;
+module.exports = {firebase, storage, auth};
 // Es lo mismo que export {storage, firebase as default}

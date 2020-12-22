@@ -17,17 +17,21 @@
   },
   "homepage": "https://github.com/LuisVegas88/EthicalChoiceApp#readme",
   "dependencies": {
+    "atob": "^2.1.2",
     "base-64": "^1.0.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "firebase": "^8.2.1",
     "global": "^4.4.0",
     "googleapis": "^66.0.0",
     "mongodb": "^3.6.3",
+    "multer": "^1.4.2",
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.1",
-    "react": "^17.0.1"
+    "react": "^17.0.1",
+    "xhr2": "^0.2.0"
   }
 }
