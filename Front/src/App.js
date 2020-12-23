@@ -1,7 +1,7 @@
 import './App.css';
 import Register from './Components/Register/Register';
 import Google from './Components/GoogleOAuth/Google';
-import FirebaseUpload from './Components/Firebase/fbStoreage/fbStorage.js';
+import FirebaseUpload from './Components/Firebase/fbStorage/fbStorage.js';
 
 function App() {
   return (

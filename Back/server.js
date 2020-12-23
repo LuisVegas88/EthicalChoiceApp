@@ -12,9 +12,10 @@ const crypto = require("crypto");
 const dotenv = require("dotenv").config();
 const cookieParser = require("cookie-parser"); const bodyParser = require("body-parser");
 const base64 = require("base-64");
+const FirebaseUpload = require("./Firebase/fbStorage/fbStorage");
+const Multer = require("multer");
 const SECRET = process.env.SECRET_JWT;
 const options = {
-
 	"maxAge": 1000 * 60 * 15 * 4 * 24 * 15, // would expire after 15 days		////// OPTIONS DE JWT//////
 	"httpOnly": true, // The cookie only accessible by the web server
 	"signed": false // Indicates if the cookie should be signed
@@ -802,6 +803,7 @@ server.put("/AddFavToFolder",(req, res) =>{
 
 server.get("/DeleteFolderContent", (req, res) => {
 	const { idfav } = req.query
+
 	let connection = openDB();
 	connection.query(`DELETE FROM FolderFavs WHERE idFavs=?`, [idfav], (err,result)=>{
 		if (err) {
@@ -814,7 +816,22 @@ server.get("/DeleteFolderContent", (req, res) => {
 		}		
 	})
 	connection.end();
-})
+});
+
+//// UPLOAD PROFILE IMAGE TO FB AND DB ////
+server.post("/upload", Multer().none() , async (req, res) => {
+	const {img} = req.body;
+	if (img)
+	{
+		let url = await FirebaseUpload(img);
+		console.log("URL", url);
+		res.send({url});
+	}
+	else
+		res.send({"error": "No image provided"})
+	// res.send({"url": await FirebaseUpload(img)});
+	
+});
 
 //////////////////////////////////////////////
 ////////LISTENING PORT/////////
@@ -822,3 +839,5 @@ server.get("/DeleteFolderContent", (req, res) => {
 server.listen(listeningPort, () => {
 	console.log(`Server Listening on port ${listeningPort}`);
 })
+
+
