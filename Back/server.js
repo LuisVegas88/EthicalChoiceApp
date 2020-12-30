@@ -51,31 +51,6 @@ function CredentialsValidator(Email, Password) {
 }
 
 
-///////////////////////////////////////////////JWT//////////////////////////////////////////////////////////
-// const SECRET = crypto.randomBytes(80).toString("hex");
-
-////COMPROBACIÓN DEL JWT/////
-// server.get("/jwt", (req, res) => {
-
-// 	const Payload = {
-
-// 		"userName": "Admin",
-// 		"iat": new Date(),
-// 		"role": "Admin",
-// 		"ip": req.ip
-// 	};
-// 	const JWT = generateJWT(Payload);
-// 	res.cookie("jwt", JWT, { "httpOnly": true });
-// 	res.send("Hola Mundo");
-// });
-
-/////todo OK¡(Comprobado)
-
-//FUNCIONES PARA CODIFICACION JWT  (front-end)
-
-
-
-
 //////////////////////////////////////////////////////////////////OAUTHs/////////////////////////////////////////////////////
 /////////////////GOOGLE///////////////////////////
 ///endpoints////
@@ -116,7 +91,7 @@ server.get("/loginG", async (req, res) => {
 										"role": "User",
 										"ip": req.ip
 									};
-									res.cookie("jwt", generateJWT(Payload), options).send({ "msg": "New user has been created." });
+									res.cookie("jwt", JWT.generateJWT(Payload), options).send({ "msg": "New user has been created." });
 								});
 							});
 						} else {
@@ -137,7 +112,7 @@ const { google } = require("googleapis");
 const { query } = require("express");
 const { CLIENT_RENEG_WINDOW } = require("tls");
 const { Server } = require("http");
-const { url } = require("inspector");
+const { siteVerification } = require("googleapis/build/src/apis/siteVerification");
 
 let GOOGLE_CLIENT_SECRET = "SXcyjROrUcPU3AaUSPCrCFF2";
 let GOOGLE_CLIENT_ID = "298704109696-uiv8f6d8j3bf84bevu7epha2o507dh5g.apps.googleusercontent.com";
@@ -285,10 +260,8 @@ server.post("/register", (req, res) => {
 						connection.query(`INSERT INTO UserRegister (idUser, HashPass) VALUES (?, ?);`, [idUser, hash(newUser.Password)])
 
 						const Payload = {
-							"userName": newUser.Name,
-							"userPassword": newUser.Password,
-							"userEmail": newUser.Email,
-							"userAvatar": newUser.Avatar,
+							"User": newUser.Name,
+							"Email": newUser.Email,
 							"iat": new Date(),
 							"role": "User",
 							"ip": req.ip
@@ -456,92 +429,121 @@ server.get("/searchRetailer/Products", (req, res) => {
 
 ////USER PROFILE///
 server.get("/User", (req, res) => {
-	const { search } = req.query;
-	let connection = openDB();
-	connection.query(`SELECT * FROM User WHERE Email = ?;`, [search],(err,result)=>{
-		if (err) {
+	if (JWT.verifyJWT(req.cookies.jwt))
+	{
+		const {idUser} = JWT.getJWTInfo(req.cookies.jwt);
+		if(idUser)
+		{
+			let connection = openDB();
+			connection.query(`SELECT * FROM User WHERE idUser = ?;`, [idUser],(err,result)=>{
+			if (err) {
 			res.send(err);
-		}
-		if(result){
+			}
+			if(result){
 			res.send(result);
+			}
+			})
+			connection.end();	
 		}
-	})
-	connection.end();
+		else
+			res.send({"error": "No JWT from this User"});
+	}
+	else
+		res.send({"error": "No JWT"});	
 })
 
 ///EDIT USER PROFILE///	
 server.put("/User/Edit/", (req, res) => {
-	const {idUser} = req.query;
-	console.log(idUser);
-	if (idUser) {
-		let connection = openDB();
-		connection.query(`SELECT * FROM User WHERE idUser = ?;`, [idUser],(err, result) => {
+	if(JWT.verifyJWT(req.cookies.jwt))
+	{
+		const {idUser} = JWT.getJWTInfo(req.cookies.jwt);
+		if (idUser) 
+		{
+			let connection = openDB();
+			connection.query(`SELECT * FROM User WHERE idUser = ?;`, [idUser],(err, result) => {
+				if (err) {
+					res.send(err);
+				}
+				if (result) {
+					console.log(result);
+					const changes = req.body;
+					const UserChange = {
+						"idUser": idUser,
+						"Name": changes.Name,
+						"Surname": changes.Surname,
+						"Email": changes.Email,
+						"Avatar": changes.Avatar ? `"${changes.Avatar}"` : `NULL`
+					}
+					if (changes.Name && changes.Surname  && changes.Email) {
+						let validated = CredentialsValidator(changes.Email, changes.Password);
+						if (validated) {
+							connection = openDB();
+							connection.query(`UPDATE User SET  Name = "${changes.Name}",Email ="${changes.Email}",Avatar = ${UserChange.Avatar},Surname ="${changes.Surname}" WHERE idUser = ${idUser};`)
+
+							const Payload = {
+								"userName": changes.Name,
+								"userEmail": changes.Email,
+								"userAvatar": changes.Avatar,
+								"userSurname": changes.Surname,
+								"iat": new Date(),
+								"role": "User",
+								"ip": req.ip
+							};
+							res.cookie("jwt", generateJWT(Payload), options).send({ "msg": "User has been changed." });
+
+						} else {
+							res.send("User or password NOT valid");
+						}
+					} else {
+						res.send("User name or Email don't exists");
+					}
+				} 
+			})
+			connection.end();
+		}
+		else
+			res.send({"error": "No JWT from this User"});	
+	}
+	else
+		res.send({"error": "No JWT"});
+	
+})
+///////////////////////////////////////////////////////F A V S//////////////
+
+///USER'S FAVS LIST //
+
+server.get("/Favs", (req, res) => {
+	if(JWT.verifyJWT(req.cookies.jwt))
+	{
+		const {idUser} = JWT.getJWTInfo(req.cookies.jwt);
+		if(idUser)
+		{
+			let connection = openDB();
+			connection.query(`SELECT p.Name, p.Brand, p.Category, p.Picture FROM Products AS p JOIN Favs as f ON p.idProduct = f.idProduct WHERE f.idUser = ?`, [idUser],(err,result)=>{
 			if (err) {
 				res.send(err);
 			}
-			if (result) {
-				console.log(result);
-				const changes = req.body;
-				const UserChange = {
-					"idUser": idUser,
-					"Name": changes.Name,
-					"Surname": changes.Surname,
-					"Email": changes.Email,
-					"Avatar": changes.Avatar ? `"${changes.Avatar}"` : `NULL`
-				}
-				if (changes.Name && changes.Surname  && changes.Email) {
-					let validated = CredentialsValidator(changes.Email, changes.Password);
-					if (validated) {
-						connection = openDB();
-						connection.query(`UPDATE User SET  Name = "${changes.Name}",Email ="${changes.Email}",Avatar = ${UserChange.Avatar},Surname ="${changes.Surname}" WHERE idUser = ${idUser};`)
-
-						const Payload = {
-							"userName": changes.Name,
-							"userEmail": changes.Email,
-							"userAvatar": changes.Avatar,
-							"userSurname": changes.Surname,
-							"iat": new Date(),
-							"role": "User",
-							"ip": req.ip
-						};
-						res.cookie("jwt", generateJWT(Payload), options).send({ "msg": "User has been changed." });
-
-					} else {
-						res.send("User or password NOT valid");
-					}
-				} else {
-					res.send("User name or Email don't exists");
-				}
-			} 
-		})
-		connection.end();
+			if(result){
+				res.send(result);
+			}
+			})
+			connection.end();
+		}
+		else
+			res.send({"error": "No JWT from this User"});	
 	}
+	else
+		res.send({"error": "No JWT"});
+	
 })
-///////////////////////////////////////////////////////F A V S///////////////////////////////////////////////////////////////////////
-///U SER'S FAVS LIST //
-
-server.get("/Favs", (req, res) => {
-	const { search } = req.query;
-	let connection = openDB();
-	connection.query(`SELECT p.Name, p.Brand, p.Category, p.Picture FROM Products AS p JOIN Favs as f ON p.idProduct = f.idProduct WHERE f.idUser = ?`, [search],(err,result)=>{
-		if (err) {
-			res.send(err);
-		}
-		if(result){
-			res.send(result);
-		}
-	})
-	connection.end();
-})
-///Add FAV///
+///ADD FAV///
 
 server.put("/AddFav", (req, res) =>{
 	if (JWT.verifyJWT(req.cookies.jwt))
 	{
-		const {idUser} = JWT.getJWTInfo(req.cookies.jwt)
+		const {idUser} = JWT.getJWTInfo(req.cookies.jwt);
 		if (idUser)
 		{
-			console.log(idUser);
 			const {idProduct} = req.query;
 				if(idProduct,idUser){
 					let connection = openDB();
@@ -557,10 +559,10 @@ server.put("/AddFav", (req, res) =>{
 			}
 		}
 		else
-			res.send({"error": "No JWT"})
+			res.send({"error": "No JWT from this User"});
 	}
 	else
-		res.send({"error": "No JWT"})
+		res.send({"error": "No JWT"});
 })
 ///Delete FAV ////
 
@@ -581,17 +583,27 @@ server.get("/DeleteFav", (req, res) => {
 ///SHOW USER'S FOLDERS FAVS names///
 
 server.get("/ShowUserFolders", (req, res) => {
-	const { userid } = req.query;
-	let connection = openDB();
-	connection.query(`SELECT f.Name_Folder FROM Folder AS f JOIN UserFolder AS uf ON f.idFolder = uf.idFolder WHERE uf.idUser =?`, [userid],(err,result)=>{
-		if (err) {
-			res.send(err);
+	if(JWT.verifyJWT(req.cookies.jwt))
+	{
+		const { idUser } = JWT.getJWTInfo(req.cookies.jwt)
+		if(idUser)
+		{
+			let connection = openDB();
+			connection.query(`SELECT f.Name_Folder FROM Folder AS f JOIN UserFolder AS uf ON f.idFolder = uf.idFolder WHERE uf.idUser =?`, [idUser],(err,result)=>{
+				if (err) {
+					res.send(err);
+				}
+				if (result){
+					res.send(result.map(folder => folder.Name_Folder));
+				}
+			})
+		connection.end();
 		}
-		if (result){
-			res.send(result.map(folder => folder.Name_Folder));
-		}
-	})
-	connection.end();
+		else
+			res.send({"error": "No JWT from this User"});
+	}
+	else
+		res.send({"error": "No JWT"});
 })
 
 ///USER'S FOLDER CONTENT///
@@ -613,25 +625,180 @@ server.get("/ShowFolderContent", (req, res) => {
 ///DELETE USER´S FOLDER///
 
 server.get("/DeleteFolder", (req, res) => {
-	const { folder, user } = req.query
-	let connection = openDB();
-	connection.query(`DELETE FROM UserFolder WHERE idFolder=? AND idUser=?`, [folder, user],(err,result)=>{
-		if (err) {
-			res.send(err);
+	if(JWT.verifyJWT(req.cookies.jwt)){
+		const {idUser} = JWT.getJWTInfo(req.cookies.jwt)
+		if(idUser)
+		{
+		const { folder} = req.query
+		let connection = openDB();
+		connection.query(`DELETE FROM UserFolder WHERE idFolder=? AND idUser=?`, [folder,idUser],(err,result)=>{
+			if (err) {
+				res.send(err);
+			}
+			if(result.affectedRows===0){
+				res.send("Folder NOT exist");
+			}else{
+				res.send("Folder Deleted");
+			}
+		})
+		connection.end();
 		}
-		if(result.affectedRows===0){
-			res.send("Folder NOT exist");
-		}else{
-			res.send("Folder Deleted");
-		}
-	})
-	connection.end();
+		else
+			res.send({"error": "No JWT from this User"})
+	}
+	res.send({"error": "No JWT"})
 })
-///CREATE FOLDER///
+///CREATE FOLDER dentro de USER///
 
 server.put("/CreateFolder", (req , res) =>{
+	
+	if (JWT.verifyJWT(req.cookies.jwt))
+	{
+		const {idUser} = JWT.getJWTInfo(req.cookies.jwt);
+		if (idUser)
+		{
+			//Primero Creamos Carpeta en la tabla Folder//
+			const{FolderName} = req.body;
+				if(FolderName){
+					console.log(idUser)
+					let connection = openDB();
+					connection.query(`SELECT * FROM Folder WHERE name_folder = ?`,[FolderName],(err, result)=>{
+						
+						if(err){
+							res.send(err);
+						}
+						if(!result.length){//Si nos da un array vacio es que no tenemos ese nombre en la base de datos
+							let connection = openDB();
+							connection.query(`INSERT INTO Folder (name_Folder) VALUES (?)`,[FolderName],(err,result)=>{
+								if(err){
+									res.send(err);
+								}
+								if(result){
+									let idFolder = result.insertId;//Id del Ultimo folder creado
+									//Asociamos la nueva carpeta al Usuario (la metemos en la tabla UserFolder)
+									let connection = openDB();
+									connection.query(`INSERT INTO UserFolder (idUser,idFolder) VALUES(?,?)`,[idUser,idFolder],(err,result)=>{
+										if(err){
+											res.send(err);
+										}
+										if(result){
+											res.send({"res":"0","msg":"Folder Created"})
+										}
+									})
+								}
+								else
+									res.send({"res":"1","msg":"Please,Insert your Folder Name"})
+							})
+						}
+						else{
+							//Aun así tenemos que añadirla usando el mismo idFolder de la que ya existe en nuestra DB
+							let idFolder2 = result[0].idFolder;
+							let connection = openDB();
+							connection.query(`SELECT * FROM UserFolder WHERE idFolder =? AND idUser=?`,[idFolder2,idUser],(err,result)=>{
+								
+								if(err){
+									res.send(err);
+								}
+								if(!result.length){ //Si NO tenemos dicha carpeta entonces si que la añadimos a UserFolder
+									connection.query(`INSERT INTO UserFolder (idUser,idFolder) VALUES(?,?)`,[idUser,idFolder2], (err,result)=>{
+									if(err){
+									throw err;
+									}
+									if(result){
+									res.send({"res":"2","msg":"added to FolderFavs with a reference to an existing folder in Folder table"});
+									}
+									})
+								}
+								else
+									res.send({"res":"3","msg":"Folder Already exits"});
+							})
+							
+						}
+					});
+					connection.end();
+				}
+		}
+	}
+});
+//EDIT name USER'S FOLDER //
 
-} )
+server.put("/EditFolder",(req, res)=>{
+	if (JWT.verifyJWT(req.cookies.jwt))
+	{
+		const {idUser} = JWT.getJWTInfo(req.cookies.jwt);
+		if (idUser) 
+		{
+			let connection = openDB();
+			connection.query(`SELECT f.name_Folder, f.idFolder FROM Folder AS f JOIN UserFolder AS uf ON uf.idFolder= f.idFolder WHERE idUser=?`, [idUser],(err,result)=>{
+				if(err){
+					res.send(err);
+				}
+				if(result){
+					const {idFolder}=req.query;
+					const {newName}=req.body;
+					let connection =openDB();
+					connection.query(`UPDATE Folder SET name_Folder =? WHERE idFolder=?`,[newName,idFolder],(err,result)=>{
+						if(err){
+							res.send(err);
+						}
+						if (result){
+							res.send({"msg":"Name Updated"})
+						}
+					})
+				}
+			})
+		}
+		else
+			res.send({"error": "No JWT from this User"})
+	}
+	else
+		res.send({"error": "No JWT"});
+})
+
+//ADD FAV TO USER'S FOLDER//
+
+server.put("/AddFavToFolder",(req, res) =>{
+	if(JWT.verifyJWT(req.cookies.jwt))
+	{
+		const {idUser} = JWT.getJWTInfo(req.cookies.jwt);
+		if (idUser)
+		{
+			//PRIMERO añadimos a Favs
+			{
+				const {idProduct} = req.query;
+				if(idProduct,idUser){
+						let connection = openDB();
+						connection.query(`INSERT INTO Favs (idUser, idProduct) VALUES (?,?)`,[idUser,idProduct], (err,result)=>{
+							if(err){
+								res.send(err);
+							}
+							if(result){//SEGUNDO añadimos a FolderFavs
+								let idFav = result.insertId;//Último fav añadido
+								const {idFolder} = req.query;
+								let connection = openDB();
+								connection.query(`INSERT INTO FolderFavs (idFolder,idFavs) VALUES (?,?)`,[idFolder, idFav], (err, result)=>{
+									if(err){
+										res.send(err);
+									}
+									if(result){
+										res.send({msg:0,tst:"Inserted Fav to Folder"});
+									}
+								});
+							}
+						});
+					connection.end();	
+				}
+				else
+					res.send({"res":"Not iDProduct"})
+			}
+		}
+		else
+			res.send({"error": "No JWT from this User"});
+	}
+	else
+		res.send({"error": "No JWT"});
+});
+
 ///DELETE FAV FROM USER'S CONTENT///
 
 server.get("/DeleteFolderContent", (req, res) => {

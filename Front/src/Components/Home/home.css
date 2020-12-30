@@ -1,0 +1,23 @@
+
+.Fondo{
+    background-image:url(./FondoG.png);
+    background-size: cover;
+    height: 531px;
+    margin-top: 85px;
+}
+#Quote {
+    position: absolute;
+    width: 243px;
+    height: 68px;
+    top: 275px;
+    text-align: left;
+    left:75px;
+
+    font-style: normal;
+    font-weight: 900;
+    font-size: 30px;
+    line-height: 34px;
+    letter-spacing: 0.2px;
+
+    color: #2D6A4F;
+}
