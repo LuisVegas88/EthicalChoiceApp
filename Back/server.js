@@ -137,6 +137,7 @@ const { google } = require("googleapis");
 const { query } = require("express");
 const { CLIENT_RENEG_WINDOW } = require("tls");
 const { Server } = require("http");
+const { url } = require("inspector");
 
 let GOOGLE_CLIENT_SECRET = "SXcyjROrUcPU3AaUSPCrCFF2";
 let GOOGLE_CLIENT_ID = "298704109696-uiv8f6d8j3bf84bevu7epha2o507dh5g.apps.googleusercontent.com";
@@ -658,11 +659,30 @@ server.post("/upload", Multer().none() , async (req, res) => {
 		let url = await FirebaseUpload(img);
 		console.log("URL", url);
 		res.send({url});
+		if (JWT.verifyJWT(req.cookies.jwt))
+		{
+			const {idUser} = JWT.getJWTInfo(req.cookies.jwt)
+			if (idUser)
+			
+			{
+				let connection = openDB();
+				connection.query(`UPDATE User SET Avatar = ? WHERE idUser = ? `, [url, idUser], (err, result) => {
+				if (err) {
+					res.send(err)
+				} 
+				if(result){
+					res.send({"msg": "Uploaded profile image"})
+				}
+			})
+	
+			connection.end()
+		
+			};
+		};
 	}
 	else
 		res.send({"error": "No image provided"})
 	// res.send({"url": await FirebaseUpload(img)});
-	
 });
 
 //////////////////////////////////////////////
