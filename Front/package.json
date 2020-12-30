@@ -9,6 +9,7 @@
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.5.0",
+    "animate.css": "^4.1.1",
     "babel": "^6.23.0",
     "emotion": "^11.0.0",
     "firebase": "^8.2.1",

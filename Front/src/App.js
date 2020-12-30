@@ -4,7 +4,7 @@ import Home from './Components/Home/Home.js'
 // import Register from './Components/Register/Register';
 // import Google from './Components/GoogleOAuth/Google';
 // import FirebaseUpload from './Components/Firebase/fbStorage/fbStorage.js';
-import NavBottom from './Components/NavTabBottom/NavBottom.js';
+import NavBar from './Components/NavTabBottom/NavBar.js';
 import Toolbar from './Components/Toolbar/Toolbar.js';
 
 const App = ()=> {
@@ -13,7 +13,7 @@ const App = ()=> {
     <div className="App">
       <Toolbar />
       <Home />
-      <NavBottom className="NavBottom"/>
+      <NavBar className="NavBottom"/>
       
       {/* <Register />
       <Google />
