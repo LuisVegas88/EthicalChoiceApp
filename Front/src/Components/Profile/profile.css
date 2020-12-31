@@ -1,0 +1,11 @@
+#Perfil{
+
+    position: absolute;
+    top:0px;
+    left:0px;
+    background-image:url(../../imagenes/perfil.png);
+    background-size: cover;
+    height: 607px;
+    width: 375px;
+    margin-top: 0px;
+}

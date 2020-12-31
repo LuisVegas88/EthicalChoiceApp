@@ -1,9 +1,9 @@
 
 .Fondo{
-    background-image:url(./FondoG.png);
+    background-image:url(../../imagenes/FondoG.png);
     background-size: cover;
     height: 531px;
-    margin-top: 85px;
+    margin-top: 76px;
 }
 #Quote {
     position: absolute;
