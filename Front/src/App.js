@@ -6,6 +6,8 @@ import Home from './Components/Home/Home.js'
 // import FirebaseUpload from './Components/Firebase/fbStorage/fbStorage.js';
 import NavBar from './Components/NavTabBottom/NavBar.js';
 import Toolbar from './Components/Toolbar/Toolbar.js';
+import Getherbolarios from './Components/LogIn/ExampleFetch';
+import Login from './Components/LogIn/LogIn';
 
 const App = ()=> {
   return (
@@ -14,6 +16,8 @@ const App = ()=> {
       <Toolbar />
       <Home />
       <NavBar className="NavBottom"/>
+      <Getherbolarios />
+      <Login />
       
       {/* <Register />
       <Google />

@@ -310,7 +310,7 @@ server.post("/Login", (req, res) => {
 							"role": "User",
 							"ip": req.ip
 						};
-						res.cookie("jwt", JWT.generateJWT(Payload), options).send({ "msg": "Logged¡" });
+						res.cookie("jwt", JWT.generateJWT(Payload), options).send("Logged¡");
 					} else {
 						res.send("Wrong credentials")
 					}
