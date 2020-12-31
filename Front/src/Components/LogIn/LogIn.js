@@ -1,46 +1,83 @@
-import React, {Component} from 'react';
-import useFetch from '../../Hooks/useFetch';
+import React, {useState} from 'react';
+import {Redirect} from 'react-router-dom';
+import {useRedirect} from '../../Hooks/useRedirect';
+// import {useForm} from '../../Hooks/useForm';
 
 const Login = () => {
 
-    const [formValues, handleInputChange] = useForm({
-        email: "",
-        password:""
-    })
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-    const {email, password} = formValues;
+    const user = {
+        Email: email,
+        HashPass: password
+    }
+
+    console.log(user);
+    const Redirect = useRedirect();
+
+   
+    const fetchData = async (e) => {
+
+     
+
+        const url = 'http://localhost:8888/Login';
+
+        const resp = await fetch (url, {
+            method:"POST",
+            headers: {
+                // 'Access-Control-Allow-Origin' : '*',
+                // 'Access-Control-Allow-Headers' : '*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+        .then(response => response.text())
+        .then (data => {
+            console.log(data);
+            if(data === "Logged¡"){
+                console.log("FUNCIONA");
+                Redirect ("/profile");
+            }
+        })
+
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetchLogin();
-    };
+        fetchData();
 
-    const {url, fetchLogi} = useEndPoints();
-    const {data} = useFetch(`${url}`);
+    }
 
     return (
         <div className="log">
-            <form onSubmit={handleSubmit} className = "formLogIn"/>
-            <label>Email</label>
-            <input 
+         <form className = "formLogIn"/>
+          <label>Email</label>
+             <input 
                 type="text"
                 name="email"
+                id="email"
                 className="elogIn"
                 placeholder="name@example.com"
-                value={email}
-                onChange={handleInputChange}
+                value= {email}
+                onChange={(e) => setEmail(e.target.value)}
             />
             <label>Password</label>
             <input
                 type="password"
                 name="pass"
+                id="pass"
                 className="passlogIn"
                 placeholder="contraseña"
                 value={password}
-                onChange={handleInputChange}
+                onChange={(e) => setPassword(e.target.value)}
             />
-            <button type="submit" className="submit" onClick={() => redirect("/")}>Come in</button>
+            <button type="submit" className="submit" onClick={handleSubmit}>Come in</button>
         </div>
 
     )
+    
+
 }
+
+export default Login;
