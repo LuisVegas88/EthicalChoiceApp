@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {Redirect} from 'react-router-dom';
 import {useRedirect} from '../../Hooks/useRedirect';
-// import {useForm} from '../../Hooks/useForm';
+
 
 const Login = () => {
 
@@ -18,12 +17,9 @@ const Login = () => {
 
    
     const fetchData = async (e) => {
-
-     
-
         const url = 'http://localhost:8888/Login';
 
-        const resp = await fetch (url, {
+        const res = await fetch (url, {
             method:"POST",
             headers: {
                 // 'Access-Control-Allow-Origin' : '*',
@@ -36,18 +32,16 @@ const Login = () => {
         .then (data => {
             console.log(data);
             if(data === "Logged¡"){
-                console.log("FUNCIONA");
-                Redirect ("/profile");
-            }
+                console.log("FUNCIONA")
+                Redirect("/profile")} 
         })
 
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         fetchData();
-
-    }
+     }
+    
 
     return (
         <div className="log">

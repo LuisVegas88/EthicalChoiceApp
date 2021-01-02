@@ -257,7 +257,7 @@ server.post("/register", (req, res) => {
 							throw err;
 						// console.log(result)
 						let idUser = result.insertId;
-						connection.query(`INSERT INTO UserRegister (idUser, HashPass) VALUES (?, ?);`, [idUser, hash(newUser.Password)])
+						connection.query(`INSERT INTO UserRegister (idUser, HashPass) VALUES (?, ?);`, [idUser, JWT.hash(newUser.Password)])
 
 						const Payload = {
 							"User": newUser.Name,
@@ -267,7 +267,7 @@ server.post("/register", (req, res) => {
 							"ip": req.ip
 						};
 
-						res.cookie("jwt", generateJWT(Payload), options).send({ "msg": "New user has been created." });
+						res.cookie("jwt", JWT.generateJWT(Payload), options).send({ "msg": "New user has been created." });
 					})
 
 				} else {

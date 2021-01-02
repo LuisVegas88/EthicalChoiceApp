@@ -8,6 +8,7 @@ import NavBar from './Components/NavTabBottom/NavBar.js';
 import Toolbar from './Components/Toolbar/Toolbar.js';
 import Getherbolarios from './Components/LogIn/ExampleFetch';
 import Login from './Components/LogIn/LogIn';
+import Register from './Components/Register/Register.js'
 
 const App = ()=> {
   return (
@@ -18,10 +19,10 @@ const App = ()=> {
       <NavBar className="NavBottom"/>
       <Getherbolarios />
       <Login />
-      
-      {/* <Register />
-      <Google />
-      <FirebaseUpload /> */}
+      <Register />
+     
+      {/* <Google />
+      <FirebaseUpload />  */}
     </div>
    
     // </NavigationContainer>
