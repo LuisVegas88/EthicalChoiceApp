@@ -12,15 +12,18 @@ import {
     Switch,
     Route,
     Link,
-    Redirect
   } from "react-router-dom";
+// import { Profile } from '../Profile/Profile';
+import {Home} from '../Home/Home';
+import { Signup } from '../Signup/Signup';
 import { Profile } from '../Profile/Profile';
+import ModalL from '../Signup/PopupLogin';
 const NavBar = () => {
     return(
       <Router>
       <div className="Bottom">
           <div className= "Home">
-            <Link to="/home" >
+            <Link to="/" >
             <HoverImage className="HomeLogo" src={Homelogo} hoverSrc={HomelogoG}  alt={"logoG"} />
             </Link > 
           </div>
@@ -28,25 +31,30 @@ const NavBar = () => {
             <Link to="/favs">
             <HoverImage className="FavLogo" src={Favlogo} hoverSrc={FavlogoG}  alt={"logofavG"} />
             </Link >
-          </div>
+          </div>    
           <div className ="Profile">
-            <Link  to="/profile">
+            <Link  to="/signup">
             <HoverImage className="ProfLogo" src={Proflogo} hoverSrc={ProflogoG}  alt={"ProfG"} />
             </Link >
           </div>
             
             
         <Switch>
-          <Route exact path="/home">
-            {/* <Home /> */}
+          <Route exact path="/">
           </Route>
           <Route path="/favs" >
             {/* <About /> */}
           </Route>
-          <Route path="/profile">
-            <Profile id="Profileimg"/>
+          <Route path="/signup">
+            <Signup />
           </Route>
-          <Redirect to = "/home"/>
+          <Route path ="/profile">
+            <Profile />
+          </Route>
+          <Route path ="/loginP">
+            <ModalL />
+          </Route>
+          
         </Switch>
       </div>
     </Router>

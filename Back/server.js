@@ -267,11 +267,13 @@ server.post("/register", (req, res) => {
 							"ip": req.ip
 						};
 
-						res.cookie("jwt", JWT.generateJWT(Payload), options).send({ "msg": "New user has been created." });
+						res.cookie("jwt", JWT.generateJWT(Payload), options).send("New user has been created.");
+					
 					})
 
 				} else {
 					res.send("User name or Email already exists")
+					
 				}
 			})
 		} else {

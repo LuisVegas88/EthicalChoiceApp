@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import {useRedirect} from '../../Hooks/useRedirect';
+import './login.css';
+import logoEmail from '../../imagenes/email.png';
+import logoPwd from '../../imagenes/pwd.png';
 
 
-const Login = () => {
+export const Login = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -44,34 +47,33 @@ const Login = () => {
     
 
     return (
-        <div className="log">
+        <div id="log">
+         <h3>Login</h3>
          <form className = "formLogIn"/>
-          <label>Email</label>
-             <input 
+          <input 
                 type="text"
+                placeholder="Email"
                 name="email"
-                id="email"
-                className="elogIn"
-                placeholder="name@example.com"
-                value= {email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <label>Password</label>
+                className="login"
+                autoComplete="off"
+                value={email}
+                onChange={ (e) => setEmail(e.target.value) }/>
+                <img src={logoEmail} alt={"logoemail"} id="logoEmail2"/>
+            
             <input
                 type="password"
-                name="pass"
-                id="pass"
-                className="passlogIn"
-                placeholder="contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button type="submit" className="submit" onClick={handleSubmit}>Come in</button>
+                placeholder="Contraseña"
+                name="password2"
+                className="login"
+                value={ password }
+                onChange={ (e) => setPassword(e.target.value) }/>
+                <img src={logoPwd} alt={"logoPwd"} id="logoPwd2"/>
+            
+            <button type="submit" className="submitlogin" onClick={handleSubmit}>Come in</button>
         </div>
 
     )
     
 
 }
-
 export default Login;
