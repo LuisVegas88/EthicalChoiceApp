@@ -5,10 +5,10 @@ import logoDoc from '../../imagenes/Document.png';
 import logoPwd from '../../imagenes/pwd.png';
 import logoGoogle from '../../imagenes/google.png';
 import { useRedirect } from '../../Hooks/useRedirect';
-import { Link } from 'react-router-dom';
+import { Link,useHistory } from 'react-router-dom';
 
 const Register = () => {
-    
+    const history=useHistory();
     const redirect = useRedirect();
     
     const [email, setEmail] = useState("");
@@ -31,33 +31,38 @@ const Register = () => {
 
         const res = await fetch (url, {
             method:"POST",
+            credentials:"include",
             headers: {
-                'Access-Control-Allow-Origin' : '*',
-                'Access-Control-Allow-Headers' : '*',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(useForm)
         })
         .then(response => response.text())
-        .then (data => {
-            console.log(data);
-        //   if(data===("User name or Email already exists")||("Usuario o Contraseña NO válidos")||("Please, Complete Credentials")){
-        //     ;
-        // }
+        .then(data =>{
+            if(data==="User name or Email already exists"||data==="Usuario o Contraseña NO válidos"||data==="Please, Complete Credentials")
+            {
+                
+                console.log(data)
+            }
+            else{
+                console.log(data)
+                
+                redirect("/profile");
+            }
         })
+        
     }
 
     const handleRegister = (e) => {
         e.preventDefault();
         fecthData();
-        redirect("/profile")
     }
 
     return (
         <>
             <div className ="mainContainer">
                 <h3 id="miP">Mis datos</h3>
-                <form  onSubmit ={handleRegister} >
+                <form >
                     
                     <input 
                         type="text"
@@ -99,7 +104,7 @@ const Register = () => {
                     <img src={logoPwd} alt={"logoPwd"} id="logoPwd"/>
 
 
-                    <button id="BtnRegister" type="submit" >Aceptar y Unirse</button>
+                    <button id="BtnRegister" type="submit" onClick ={handleRegister}>Aceptar y Unirse</button>
 
                     <button id="BtnGoogle" onClick={() => {redirect("/")}}>
                         <div id="textGoogle">

@@ -20,18 +20,15 @@ export const Login = () => {
 
    
     const fetchData = async (e) => {
-        const url = 'http://localhost:8888/Login';
-
-        const res = await fetch (url, {
-            method:"POST",
+        const url = 'http://localhost:8888/Login'
+        const res = await fetch (url, {            method:"POST",
+            credentials:"include",
             headers: {
-                // 'Access-Control-Allow-Origin' : '*',
-                // 'Access-Control-Allow-Headers' : '*',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json', 
             },
             body: JSON.stringify(user)
         })
-        .then(response => response.text())
+        .then(res => res.text())
         .then (data => {
             console.log(data);
             if(data === "Logged¡"){
