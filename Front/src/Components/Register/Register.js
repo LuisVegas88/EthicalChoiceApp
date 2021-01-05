@@ -26,7 +26,7 @@ const Register = () => {
 
     
     
-    const fecthData = async (e) =>{
+    const fecthData = async (e) => {
         const url = 'http://localhost:8888/register';
 
         const res = await fetch (url, {
@@ -52,8 +52,18 @@ const Register = () => {
         })
         
     }
-
-    const handleRegister = (e) => {
+    const loginGoogle = async(e) =>{
+        const url = 'http://localhost:8888/loginGoogle'
+        await fetch(url)
+        .then(data=>{
+            console.log(data)
+        })
+    }
+    const handleGoogle = (e) => {
+        e.preventDefault()
+        loginGoogle()
+    }
+    const handleRegister =(e) => {
         e.preventDefault();
         fecthData();
     }
@@ -106,7 +116,7 @@ const Register = () => {
 
                     <button id="BtnRegister" type="submit" onClick ={handleRegister}>Aceptar y Unirse</button>
 
-                    <button id="BtnGoogle" onClick={() => {redirect("/")}}>
+                    <button id="BtnGoogle" onClick={handleGoogle}>
                         <div id="textGoogle">
                         <p>Registrarse con </p> 
                         <img id="imgGoogle" src={logoGoogle} alt="imgGoogle" />

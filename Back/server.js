@@ -269,7 +269,7 @@ server.post("/register", (req, res) => {
 							"iat": new Date(),
 							"role": "User",
 							"ip": req.ip
-						};z
+						};
 
 						res.cookie("jwt", JWT.generateJWT(Payload), options).send("New user has been created.");
 					
