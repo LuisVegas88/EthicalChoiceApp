@@ -6,6 +6,7 @@ import logoPwd from '../../imagenes/pwd.png';
 import logoGoogle from '../../imagenes/google.png';
 import { useRedirect } from '../../Hooks/useRedirect';
 import { Link,useHistory } from 'react-router-dom';
+import LoginGoogle from '../GoogleOAuth/Google'  
 
 const Register = () => {
     const history=useHistory();
@@ -16,13 +17,13 @@ const Register = () => {
     const [surname, setSurname] = useState("");
     const [password, setPassword] = useState("");
 
-    const useForm ={
+    const userForm ={
         Email: email,
         Name: name,
         Surname: surname,
         Password: password,
     }
-    console.log(useForm);
+    console.log(userForm);
 
     
     
@@ -35,7 +36,7 @@ const Register = () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(useForm)
+            body: JSON.stringify(userForm)
         })
         .then(response => response.text())
         .then(data =>{
@@ -54,14 +55,23 @@ const Register = () => {
     }
     const loginGoogle = async(e) =>{
         const url = 'http://localhost:8888/loginGoogle'
-        await fetch(url)
+        await fetch(url, {
+            redirect: 'manual',
+            credentials:"include",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
         .then(data=>{
             console.log(data)
+            console.log(data.url)
+            window.location.href=data.url
         })
     }
     const handleGoogle = (e) => {
         e.preventDefault()
         loginGoogle()
+       
     }
     const handleRegister =(e) => {
         e.preventDefault();
@@ -115,6 +125,9 @@ const Register = () => {
 
 
                     <button id="BtnRegister" type="submit" onClick ={handleRegister}>Aceptar y Unirse</button>
+                    <>
+                        <LoginGoogle />
+                    </>
 
                     <button id="BtnGoogle" onClick={handleGoogle}>
                         <div id="textGoogle">
