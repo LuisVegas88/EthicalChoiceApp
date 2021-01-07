@@ -8,8 +8,9 @@ import NavBar from './Components/NavTabBottom/NavBar.js';
 import Toolbar from './Components/Toolbar/Toolbar.js';
 import Getherbolarios from './Components/LogIn/ExampleFetch';
 import Login from './Components/LogIn/LogIn';
-import Register from './Components/Register/Register.js'
-
+import Register from './Components/Register/Register.js';
+//import SearchPage from './Components/SearchPage/searchPage';
+import GetProducts from './Components/SearchPage/searchPage';
 const App = ()=> {
   return (
     // <NavigationContainer>
@@ -20,6 +21,8 @@ const App = ()=> {
       <Getherbolarios />
       <Login />
       <Register />
+      <GetProducts />
+      
      
       {/* <Google />
       <FirebaseUpload />  */}
