@@ -95,7 +95,7 @@ server.get("/loginG", async (req, res) => {
 										"role": "User",
 										"ip": req.ip
 									};
-									res.cookie("jwt", JWT.generateJWT(Payload), options).send({ "msg": "New user has been created." });
+									res.cookie("jwt", JWT.generateJWT(Payload), options).send("New user has been created");
 								});
 							});
 						} else {
