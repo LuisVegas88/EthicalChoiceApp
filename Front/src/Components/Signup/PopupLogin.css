@@ -1,0 +1,30 @@
+
+.backgroundModal {
+    position: absolute;
+    
+  }
+  .backgroundModal::before {
+    content: "";
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%; height: 100%;
+    background-image: url(../../imagenes/Background.PNG);
+    background-size: cover;
+    filter: blur(5px);
+    
+  }
+  .backgroundModal-inside {
+    /* This will make it stack on top of the ::before */
+    position: absolute;
+    
+  }
+
+#iconClose{
+      width: 22px;
+      height: 22px;
+      transform: rotate(45deg);
+      position: relative;
+    left:245px;
+    top:0px;
+}

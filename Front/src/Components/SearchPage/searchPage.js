@@ -73,7 +73,7 @@ import SearchBar from '../SearchBar/searchBar';
 const getProducts = () => {
 
     const fetchData = async () => {
-        const url = `http://localhost:8888/searchProducts/?search= ${inputSearchBar}`;
+        const url = `http://localhost:8888/searchProducts/?search= `;
         const resp = await fetch(url)
         .then(response => response.json())
         .then(data => {

@@ -3,6 +3,10 @@
 const express = require("express");
 const server = express();
 const cors = require("cors");
+server.use(cors({
+	origin:"http://localhost:3000", 
+	credentials:true,
+}));
 const myPublicFiles = express.static("../public");
 const listeningPort = 8888;
 ////Others////
@@ -27,10 +31,10 @@ const JWT = require("./lib/JWT.js");
 //////////MiddlewaresServer//////////////
 server.use(myPublicFiles);
 server.use(bodyParser.urlencoded({ "extended": false }));
-server.use(cors());
+
 
 ////Others Middlewares/////////
-server.use(cors());
+
 server.use(cookieParser());
 server.use(bodyParser.json());
 
@@ -267,11 +271,13 @@ server.post("/register", (req, res) => {
 							"ip": req.ip
 						};
 
-						res.cookie("jwt", JWT.generateJWT(Payload), options).send({ "msg": "New user has been created." });
+						res.cookie("jwt", JWT.generateJWT(Payload), options).send("New user has been created.");
+					
 					})
 
 				} else {
 					res.send("User name or Email already exists")
+					
 				}
 			})
 		} else {
