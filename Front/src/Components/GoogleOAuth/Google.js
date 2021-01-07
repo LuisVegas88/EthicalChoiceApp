@@ -39,7 +39,7 @@ const LoginGoogle = ()=> {
               else {
                 console.log(data);
                 console.log(`Welcome ${user.Name}`)
-                redirect("/profile");
+                // redirect("/profile");
               }
             });
         }

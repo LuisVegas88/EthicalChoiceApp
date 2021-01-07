@@ -117,6 +117,7 @@ const { query } = require("express");
 const { CLIENT_RENEG_WINDOW } = require("tls");
 const { Server } = require("http");
 const { siteVerification } = require("googleapis/build/src/apis/siteVerification");
+const { type } = require("os");
 
 let GOOGLE_CLIENT_SECRET = "SXcyjROrUcPU3AaUSPCrCFF2";
 let GOOGLE_CLIENT_ID = "298704109696-uiv8f6d8j3bf84bevu7epha2o507dh5g.apps.googleusercontent.com";
@@ -342,24 +343,30 @@ server.get("/logout", (req, res) => {
 server.get("/searchProducts", (req, res) => {
 	const { search, vegan, cruelty, eco } = req.query;
 	let connection = openDB();
-	connection.query(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ? OR Category LIKE ? ) ${vegan ? "AND Vegan = 1" : ""} ${cruelty ? "AND Cruelty_free = 1" : ""} ${eco ? "AND Eco = 1" : ""}  LIMIT 10`, [search, search, search],(err,result)=>{
+	connection.query(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ? OR Category LIKE ? ) ${vegan  === "true" ? "AND Vegan = 1" : ""} ${cruelty === "true" ? "AND Cruelty_free = 1" : ""} ${eco === "true" ? "AND Eco = 1" : ""}  LIMIT 10`, [`%${search}%`, `%${search}%`, `%${search}%`],(err,result)=>{
 		if (err) {
 			res.send(err);
 		}
-		if(!result.length){
-			res.send("Producto No encontrado")
+		
+		
+		if(result.length === 0){
+			res.send({"error": "Producto No encontrado"})
 		}
-		if (result.length){
+		else
+		{
 			const Product = result.map(product => {
 				return {
+					"Id":product.idProduct,
 					"Name": product.Name,
-					"img": product.Picture,
+					"Img": product.Picture,
 					"Brand": product.Brand
 				}
 			});
 			console.log(Product);
 			res.send(Product)
-		}		
+		}
+		
+		
 	})
 	connection.end();
 })
@@ -373,8 +380,9 @@ server.get("/searchProducts/Details", (req, res) => {
 		}
 		if(result){
 			const Product = {
+				"Id":product.idProduct,
 				"Name": result[0].Name,
-				"img": result[0].Picture,
+				"Img": result[0].Picture,
 				"Brand": result[0].Brand,
 				"Description": result[0].Description,
 				"Ingredients": result[0].Ingredients

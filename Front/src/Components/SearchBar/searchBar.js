@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
 
-const SearchBar = () => {
-    const [input, setInput] = useState();
+const SearchBar = ({input, setInput}) => {
 
     return (
         <div id="searcher">
@@ -12,9 +11,10 @@ const SearchBar = () => {
                 placeholder="Busca aquí"
                 onChange={(e) => setInput(e.target.value)}
             />
-            < button onClick={fetch}>Buscar</button>
+            {/* < button onClick={fetch}>Buscar</button> */}
         </div>
-    )
+    );
+
 }
 
 export default SearchBar;

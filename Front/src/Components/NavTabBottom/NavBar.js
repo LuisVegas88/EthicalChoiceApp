@@ -18,6 +18,7 @@ import {Home} from '../Home/Home';
 import { Signup } from '../Signup/Signup';
 import { Profile } from '../Profile/Profile';
 import ModalL from '../Signup/PopupLogin';
+import ProfileEdit from '../ProfileEdit/ProfileEdit';
 const NavBar = () => {
     return(
       <Router>
@@ -50,6 +51,9 @@ const NavBar = () => {
           </Route>
           <Route path ="/profile">
             <Profile />
+          </Route>
+          <Route path ="/profile/edit">
+            <ProfileEdit/>
           </Route>
           <Route path ="/loginP">
             <ModalL />

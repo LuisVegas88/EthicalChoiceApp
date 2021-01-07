@@ -8,7 +8,11 @@ import { useRedirect } from '../../Hooks/useRedirect';
 import { Link,useHistory } from 'react-router-dom';
 import LoginGoogle from '../GoogleOAuth/Google'  
 
+import Cookies from 'universal-cookie';
+
 const Register = () => {
+    const cookies = new Cookies();
+    console.log(cookies.get('jwt'));
     const history=useHistory();
     const redirect = useRedirect();
     
@@ -47,7 +51,7 @@ const Register = () => {
             }
             else{
                 console.log(data)
-                
+               
                 redirect("/profile");
             }
         })
@@ -126,7 +130,7 @@ const Register = () => {
 
                     <button id="BtnRegister" type="submit" onClick ={handleRegister}>Aceptar y Unirse</button>
                     <>
-                        <LoginGoogle />
+                        {/* <LoginGoogle /> */}
                     </>
 
                     <button id="BtnGoogle" onClick={handleGoogle}>
