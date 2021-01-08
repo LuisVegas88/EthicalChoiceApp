@@ -53,12 +53,15 @@
         border-radius: 50px;
         box-shadow: 4px 5px 7px -7px #000000;
         
+
+       
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         
         text-align: center;
         letter-spacing: 1.25px;
         text-transform: uppercase;
         color: #F7FFF7;
 }
-#LogoutP{
-    color:red
-}
+

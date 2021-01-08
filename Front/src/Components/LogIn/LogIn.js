@@ -1,12 +1,13 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {useRedirect} from '../../Hooks/useRedirect';
 import './login.css';
 import logoEmail from '../../imagenes/email.png';
 import logoPwd from '../../imagenes/pwd.png';
 
 
-export const Login = () => {
 
+export const Login = () => {
+    
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -34,7 +35,7 @@ export const Login = () => {
             console.log(data);
             if(data === "Logged¡"){
                 console.log("FUNCIONA")
-                Redirect("/profile")} 
+                Redirect("/profile")}
         })
 
     }

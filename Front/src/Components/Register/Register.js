@@ -75,7 +75,7 @@ const Register = () => {
     }
     const handleGoogle = (e) => {
         e.preventDefault()
-        removeCookie("jwt")
+        loginGoogle()
         redirect("/profile")
        
     }

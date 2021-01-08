@@ -100,7 +100,16 @@ server.get("/loginG", async (req, res) => {
 								});
 							});
 						} else {
-							res.send("User name or Email already exists, please Login")
+							const Payload = {
+								"idUser": result[0].idUser,
+								"User": name,
+								"Email": email,
+								 "Avatar":picture,
+								"iat": new Date(),
+								"role": "User",
+								"ip": req.ip
+							};
+							res.cookie("jwt", JWT.generateJWT(Payload), options).redirect("http://localhost:3000/profile");
 						}
 					})
 				connection.end();
@@ -338,19 +347,11 @@ server.get("/logout", (req, res) => {
 	if (JWT.verifyJWT(req.cookies.jwt))
 	{
 		const userData = JWT.getJWTInfo(req.cookies.jwt);
-		if(userData){
-			
+		if(userData){	
 		}
 	}
 	res.clearCookie("jwt", {path: "/"})
 	.send({msg: "Cookie deleted"});
-	// const cookies = require('cookie-universal')(req, res)
-  	// cookies.remove('jwt')
- 	// cookies.remove('jwt', {
-    // // this will allow you to remove a cookie
-    // // from a different path
-    // path: 'http://localhost:3000'
-//   })
 })
 
 ///SEARCH PRODUCTS/// 
@@ -458,7 +459,7 @@ server.get("/searchRetailer/Products", (req, res) => {
 
 ////USER PROFILE///
 server.get("/User", (req, res) => {
-	if (JWT.verifyJWT(req.cookies.jwt))
+	if (req.cookies.jwt && JWT.verifyJWT(req.cookies.jwt))
 	{
 		const userData = JWT.getJWTInfo(req.cookies.jwt);
 		
@@ -485,7 +486,8 @@ server.get("/User", (req, res) => {
 
 ///EDIT USER PROFILE///	
 server.put("/User/Edit/", (req, res) => {
-	if(JWT.verifyJWT(req.cookies.jwt))
+	console.log("hola")
+	if( JWT.verifyJWT(req.cookies.jwt))
 	{
 		const {idUser} = JWT.getJWTInfo(req.cookies.jwt);
 		if (idUser) 
@@ -505,11 +507,14 @@ server.put("/User/Edit/", (req, res) => {
 						"Email": changes.Email,
 						"Avatar": changes.Avatar ? `"${changes.Avatar}"` : `NULL`
 					}
+					console.log( changes)
 					if (changes.Name && changes.Surname  && changes.Email) {
-						let validated = CredentialsValidator(changes.Email, changes.Password);
-						if (validated) {
+						
 							connection = openDB();
-							connection.query(`UPDATE User SET  Name = "${changes.Name}",Email ="${changes.Email}",Avatar = ${UserChange.Avatar},Surname ="${changes.Surname}" WHERE idUser = ${idUser};`)
+							
+							const query= `UPDATE User SET  Name = "${changes.Name}",Email ="${changes.Email}",Avatar = ${UserChange.Avatar},Surname ="${changes.Surname}" WHERE idUser = ${idUser};`
+							connection.query(query)
+							
 
 							const Payload = {
 								"userName": changes.Name,
@@ -520,13 +525,11 @@ server.put("/User/Edit/", (req, res) => {
 								"role": "User",
 								"ip": req.ip
 							};
-							res.cookie("jwt", generateJWT(Payload), options).send({ "msg": "User has been changed." });
+							res.cookie("jwt", JWT.generateJWT(Payload), options).send({ "msg": "User has been changed." });
 
-						} else {
-							res.send("User or password NOT valid");
-						}
+	
 					} else {
-						res.send("User name or Email don't exists");
+						res.send({"msg":"User name or Email don't exists"});
 					}
 				} 
 			})

@@ -1,14 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import '../Signup/PopupLogin.css'
 import IconClose from '../../imagenes/closeAdd.png';
 import {
     Link
   } from "react-router-dom";
 import Edit from './Edit.js';
+import UserContext from "../../Contexts/userContext";
 
 
 const  ProfileEdit =()=> {
-  
+    const { userInfo, setUserInfo } = useContext(UserContext);
     return (
         
         <div className="backgroundModal">
@@ -27,9 +28,11 @@ const  ProfileEdit =()=> {
                    
                         <Link to="/">
                         <img id="iconClose" src={IconClose} alt={"cerrar"} /> 
-                        </Link> 
-                        <>
-                        <Edit />
+                            </Link> 
+                            <>
+
+                                <Edit value={ userInfo, setUserInfo}/>
+                            
                         </>
                    
             </div>

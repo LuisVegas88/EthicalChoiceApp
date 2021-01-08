@@ -1,73 +1,73 @@
-import React, {useState} from 'react';
+import React, {useState,useContext} from 'react';
 import {useRedirect} from '../../Hooks/useRedirect';
 import '../LogIn/login.css';
 import logoEmail from '../../imagenes/email.png';
 import logoPwd from '../../imagenes/pwd.png';
+import UserContext from "../../Contexts/userContext";
 
 
 export const Edit = () => {
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    const user = {
-        Email: email,
-        HashPass: password
-    }
-
-    console.log(user);
+    const { userInfo, setUserInfo } = useContext(UserContext);
+    console.log(userInfo)
     const Redirect = useRedirect();
-
-   
-    const fetchData = async (e) => {
-        const url = 'http://localhost:8888/Login'
-        const res = await fetch (url, {            
-            method:"POST",
+    
+    const fetchEdit = async (e) => {
+        console.log("nueva peticion")
+        const url = "http://localhost:8888/User/Edit/"
+        await fetch (url, {            
+            method:"PUT",
             credentials:"include",
             headers: {
                 'Content-Type': 'application/json', 
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify({
+                Name: userInfo.userName,
+                Surname: userInfo.userSurname,
+                Email: userInfo.userEmail,
+            })
         })
-        .then(res => res.text())
-        .then (data => {
-            console.log(data);
-            if(data === "Logged¡"){
-                console.log("FUNCIONA")
-                Redirect("/profile")} 
-        })
+        
 
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetchData();
+        fetchEdit();
+        Redirect("/profile")
      }
     
-
     return (
         <div id="log">
-         <h3>Login</h3>
+         <h3>Editar Perfil</h3>
          <form className = "formLogIn"/>
-          <input 
+            <input 
                 type="text"
-                placeholder="Email"
-                name="email"
+                placeholder={userInfo.userName}
+                name="Name"
                 className="login"
                 autoComplete="off"
-                value={email}
-                onChange={ (e) => setEmail(e.target.value) }/>
+                value={userInfo.userName}
+                onChange={ (e) => setUserInfo({...userInfo, userName : e.target.value}) }/>
                 <img src={logoEmail} alt={"logoemail"} id="logoEmail2"/>
-            
+        
             <input
-                type="password"
-                placeholder="Contraseña"
-                name="password2"
+                type="tex"
+                placeholder={userInfo.userSurname}
+                name="Surname"
                 className="login"
-                value={ password }
-                onChange={ (e) => setPassword(e.target.value) }/>
+                value={userInfo.userSurname}
+                onChange={ (e) => setUserInfo({...userInfo, userSurname : e.target.value}) }/>
                 <img src={logoPwd} alt={"logoPwd"} id="logoPwd2"/>
             
-            <button type="submit" className="submitlogin" onClick={handleSubmit}>Come in</button>
+            <input
+                type="tex"
+                placeholder={setUserInfo.userEmail}
+                name="Email"
+                className="login"
+                value={userInfo.userEmail}
+                onChange={ (e) => setUserInfo({...userInfo,userEmail : e.target.value}) }/>
+                <img src={logoPwd} alt={"logoPwd"} id="logoPwd2"/>
+            
+            <button type="submit" className="submitlogin" onClick={handleSubmit}>EDITAR</button>
         </div>
 
     )

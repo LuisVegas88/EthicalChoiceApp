@@ -1,4 +1,4 @@
-import React ,{ useState } from 'react';
+import React ,{ useContext, useState } from 'react';
 import './NavBottom.css';
 import HoverImage from "react-hover-image";
 import Homelogo from '../../imagenes/Home.png';
@@ -19,22 +19,25 @@ import { Signup } from '../Signup/Signup';
 import { Profile } from '../Profile/Profile';
 import ModalL from '../Signup/PopupLogin';
 import ProfileEdit from '../ProfileEdit/ProfileEdit';
+import UserContext from '../../Contexts/userContext';
 
 const NavBar = () => {
-  const [userId, setUserId] = useState();
-  const fetchUser = () =>{
-    const url ="http://localhost:8888/User"
-    fetch(url, {
-        credentials: "include"
-      })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data)
-        setUserId(data[0].idUser)
-        console.log(userId);
-    })
-}
-fetchUser()
+  const { userInfo } = useContext(UserContext);
+  // const [userId, setUserId] = useState();
+//   const fetchUser = () =>{
+//     const url ="http://localhost:8888/User"
+//     // fetch(url, {
+//     //     credentials: "include"
+//     //   })
+//     // .then(response => response.json())
+//     // .then(data => {
+//     //     console.log(data)
+//     //     setUserId(data[0].idUser)
+//     //     console.log(userId);
+//     // })
+// }
+// fetchUser()
+
     return(
       
       <Router>
@@ -51,7 +54,7 @@ fetchUser()
           </div>    
           <div className ="Profile">
             
-            <Link  to={userId ? "/profile" : "/signup"}>
+            <Link  to={userInfo ? "/profile" : "/signup"}>
             <HoverImage className="ProfLogo" src={Proflogo} hoverSrc={ProflogoG}  alt={"ProfG"} />
             </Link >
           </div>
