@@ -334,8 +334,14 @@ server.post("/Login", (req, res) => {
 ///LOGOUT///
 
 server.get("/logout", (req, res) => {
-	res.clearCookie(JWT);
-	res.redirect("http://localhost:3000"); ///Redigiria a la zona de React que queramos
+	if (JWT.verifyJWT(req.cookies.jwt))
+	{
+		const userData = JWT.getJWTInfo(req.cookies.jwt);
+		if(userData){
+			res.clearCookie(userData);;
+		
+		}
+	}  
 })
 
 ///SEARCH PRODUCTS/// 
@@ -445,15 +451,17 @@ server.get("/searchRetailer/Products", (req, res) => {
 server.get("/User", (req, res) => {
 	if (JWT.verifyJWT(req.cookies.jwt))
 	{
-		const {idUser} = JWT.getJWTInfo(req.cookies.jwt);
-		if(idUser)
+		const userData = JWT.getJWTInfo(req.cookies.jwt);
+		
+		if(userData)
 		{
 			let connection = openDB();
-			connection.query(`SELECT * FROM User WHERE idUser = ?;`, [idUser],(err,result)=>{
+			connection.query(`SELECT * FROM User WHERE idUser = ?;`, [userData.idUser],(err,result)=>{
 			if (err) {
 			res.send(err);
 			}
 			if(result){
+			console.log(result)
 			res.send(result);
 			}
 			})

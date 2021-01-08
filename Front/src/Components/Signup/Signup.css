@@ -4,7 +4,7 @@
     left:0px;
     background-image:url(../../imagenes/FondoRegister.png);
     background-size: cover;
-    height: 604.8px;
+    height: 588px;
     width: 375px;
     margin-top: 0px;
     font-family: Noto Sans KR;
@@ -15,7 +15,7 @@
     flex-direction: column;
     justify-content: center;
     padding: 40px;
-    margin-top: 255px;
+    margin-top: 200px;
 }
 
 form{
@@ -28,7 +28,7 @@ flex-direction: column;
     width: 83px;
     height: 20px;
     left: 35px;
-    top: 258px;
+    top: 200px;
     font-family: Noto Sans KR;
     font-style: normal;
     font-weight: 900;
@@ -43,7 +43,7 @@ flex-direction: column;
     width: 18px;
     height: 18px;
     left: 52px;
-    top: 304px;
+    top: 249px;
     opacity: 70%;
 }
 
@@ -52,7 +52,7 @@ flex-direction: column;
     width: 18px;
     height: 18px;
     left: 52px;
-    top: 345px;
+    top: 290px;
     opacity: 70%;
 }
 #logoDoc2{
@@ -60,7 +60,7 @@ flex-direction: column;
     width: 18px;
     height: 18px;
     left: 52px;
-    top: 385px;
+    top: 330px;
     opacity: 70%;
 }
 #logoPwd{
@@ -68,7 +68,7 @@ flex-direction: column;
     width: 18px;
     height: 18px;
     left: 52px;
-    top: 426px;
+    top: 370px;
     opacity: 70%;
 }
 
@@ -86,7 +86,7 @@ input{
     width: 200px;
     height: 32px;
     left: calc(50% - 200px/2 - 0.5px);
-    top: 465px;
+    top: 415px;
     /* background: #007CBA; */
     background:#2D6A4F;
     border: none;
@@ -106,7 +106,7 @@ input{
     width: 200px;
     height: 32px;
     left: calc(50% - 200px/2 - 0.5px);
-    top: 495px;
+    top: 448px;
     background: #E5B6A7;
     border: none;
     
@@ -166,7 +166,7 @@ input{
     position: absolute;
     width: 200px;
     left: calc(50% - 200px/2 - 0.5px);
-    top: 545px;
+    top: 504px;
     font-family: Noto Sans KR;
     font-style: normal;
     font-weight: 300;
@@ -179,4 +179,7 @@ input{
     text-decoration: none;
     color: #333333;
 
+}
+#EditP{
+    position:absolute;
 }

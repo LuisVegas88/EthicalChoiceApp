@@ -21,7 +21,8 @@ export const Login = () => {
    
     const fetchData = async (e) => {
         const url = 'http://localhost:8888/Login'
-        const res = await fetch (url, {            method:"POST",
+        const res = await fetch (url, {            
+            method:"POST",
             credentials:"include",
             headers: {
                 'Content-Type': 'application/json', 
