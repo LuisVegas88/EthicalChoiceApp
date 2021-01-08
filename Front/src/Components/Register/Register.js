@@ -8,11 +8,12 @@ import { useRedirect } from '../../Hooks/useRedirect';
 import { Link,useHistory } from 'react-router-dom';
 import LoginGoogle from '../GoogleOAuth/Google'  
 
-import Cookies from 'universal-cookie';
+import {useCookies} from 'react-cookie';
 
 const Register = () => {
-    const cookies = new Cookies();
-    console.log(cookies.get('jwt'));
+    
+    const [cookies,setCookie,removeCookie]=useCookies(["jwt"])
+
     const history=useHistory();
     const redirect = useRedirect();
     
@@ -74,7 +75,8 @@ const Register = () => {
     }
     const handleGoogle = (e) => {
         e.preventDefault()
-        loginGoogle()
+        removeCookie("jwt")
+        redirect("/profile")
        
     }
     const handleRegister =(e) => {

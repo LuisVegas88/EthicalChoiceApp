@@ -34,7 +34,7 @@ export const Profile = () => {
     const fetchlogout = () =>{
         const url ="http://localhost:8888/logout"
         fetch(url, {
-            credentials: "include"
+            credentials: 'include' 
           })
         .then(response => response.json())
         .then(data => {

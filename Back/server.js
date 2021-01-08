@@ -91,11 +91,12 @@ server.get("/loginG", async (req, res) => {
 										"idUser": idUser,
 										"User": name,
 										"Email": email,
+										 "Avatar":picture,
 										"iat": new Date(),
 										"role": "User",
 										"ip": req.ip
 									};
-									res.cookie("jwt", JWT.generateJWT(Payload), options).send("New user has been created");
+									res.cookie("jwt", JWT.generateJWT(Payload), options).redirect("http://localhost:3000/profile");
 								});
 							});
 						} else {
@@ -338,10 +339,18 @@ server.get("/logout", (req, res) => {
 	{
 		const userData = JWT.getJWTInfo(req.cookies.jwt);
 		if(userData){
-			res.clearCookie(userData);;
-		
+			
 		}
-	}  
+	}
+	res.clearCookie("jwt", {path: "/"})
+	.send({msg: "Cookie deleted"});
+	// const cookies = require('cookie-universal')(req, res)
+  	// cookies.remove('jwt')
+ 	// cookies.remove('jwt', {
+    // // this will allow you to remove a cookie
+    // // from a different path
+    // path: 'http://localhost:3000'
+//   })
 })
 
 ///SEARCH PRODUCTS/// 

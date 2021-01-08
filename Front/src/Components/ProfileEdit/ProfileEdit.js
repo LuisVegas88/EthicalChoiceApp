@@ -4,7 +4,7 @@ import IconClose from '../../imagenes/closeAdd.png';
 import {
     Link
   } from "react-router-dom";
-import Login from '../LogIn/LogIn';
+import Edit from './Edit.js';
 
 
 const  ProfileEdit =()=> {
@@ -25,11 +25,11 @@ const  ProfileEdit =()=> {
                     borderRadius: 10
                 }}>
                    
-                        <Link to="/signup">
+                        <Link to="/">
                         <img id="iconClose" src={IconClose} alt={"cerrar"} /> 
                         </Link> 
                         <>
-                        <Login />
+                        <Edit />
                         </>
                    
             </div>
