@@ -1,23 +1,31 @@
 
 .Fondo{
+    position: relative;
     background-image:url(../../imagenes/FondoG.png);
-    background-size: cover;
-    height: 588px;
+    background-size: 420px;
+   
+    background-repeat: no-repeat;
+    background-position: 0px;
+    background-position-y: 8px;
+    height: 610px;
+    top:7px;
     margin-top: 0px;
+    overflow: hidden;
+    /* z-index: -1; */
 }
 #Quote {
-    position: absolute;
+    position: relative;
     width: 243px;
     height: 68px;
-    top: 275px;
+    top: 10px;
     text-align: left;
     left:75px;
-
+    font-family: 'Noto Sans', sans-serif;
     font-style: normal;
     font-weight: 900;
     font-size: 30px;
     line-height: 34px;
     letter-spacing: 0.2px;
-
+    z-index: 0;
     color: #2D6A4F;
 }

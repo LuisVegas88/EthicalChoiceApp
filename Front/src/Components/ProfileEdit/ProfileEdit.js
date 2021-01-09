@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext} from 'react'
 import '../Signup/PopupLogin.css'
 import IconClose from '../../imagenes/closeAdd.png';
 import {
@@ -30,7 +30,6 @@ const  ProfileEdit =()=> {
                         <img id="iconClose" src={IconClose} alt={"cerrar"} /> 
                             </Link> 
                             <>
-
                                 <Edit value={ userInfo, setUserInfo}/>
                             
                         </>

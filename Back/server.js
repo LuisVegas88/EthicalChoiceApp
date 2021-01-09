@@ -359,7 +359,7 @@ server.get("/logout", (req, res) => {
 server.get("/searchProducts", (req, res) => {
 	const { search, vegan, cruelty, eco } = req.query;
 	let connection = openDB();
-	connection.query(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ? OR Category LIKE ? ) ${vegan  === "true" ? "AND Vegan = 1" : ""} ${cruelty === "true" ? "AND Cruelty_free = 1" : ""} ${eco === "true" ? "AND Eco = 1" : ""}  LIMIT 10`, [`%${search}%`, `%${search}%`, `%${search}%`],(err,result)=>{
+	connection.query(`SELECT * FROM Products WHERE (Name LIKE ? OR Brand LIKE ? OR Category LIKE ? ) ${vegan  === "true" ? "AND Vegan = 1" : ""} ${cruelty === "true" ? "AND Cruelty_free = 1" : ""} ${eco === "true" ? "AND Eco = 1" : ""}  LIMIT 15`, [`%${search}%`, `%${search}%`, `%${search}%`],(err,result)=>{
 		if (err) {
 			res.send(err);
 		}

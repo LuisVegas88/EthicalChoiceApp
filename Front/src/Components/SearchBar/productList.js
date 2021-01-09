@@ -1,9 +1,12 @@
 
-
 import React, { useEffect, useState } from 'react';
+import './Productlist.css';
+import linea from '../../imagenes/linea.png'
+import like from '../../imagenes/like.svg'
 
 const ProductList = ({search,vegan,eco,cruelty}) => {
 
+    
     const fechFav = async() => {
         const url = `http://localhost:8888/AddFav`
         const resp = await fetch(url)
@@ -45,12 +48,20 @@ const ProductList = ({search,vegan,eco,cruelty}) => {
             return <p>{error}</p>
         else
             return productList.map(product => (
-                <div key={product.Id}>
-                    <h1>{product.Name}</h1>
-                    <p>{product.Brand}</p>
-                    <img src={product.Img} alt={`${product.Name}`} />
-                    <button id="AddFav" onClick={handleFav}>fav</button>
-                </div>
+                
+                    <div key={product.Id}>
+                        <div id="ContenedorP">
+                            <div id="circle"></div>
+                            <img id="AddFav" src={like} alt="likeicon" onClick={handleFav}></img> 
+                         
+                            <img id="linea" src={linea} alt="linea"></img>
+                            <p id="brand">{product.Brand}</p>
+                            <p id ="nameP">{product.Name}</p>
+                            <img id="imgP" src={product.Img} alt={`${product.Name}`} />
+                        </div>    
+                    </div>
+                    
+                
             ));
     }
 
@@ -76,8 +87,10 @@ const ProductList = ({search,vegan,eco,cruelty}) => {
 
 
     return (
-        <div id="productList">
-           {parseData(productList)}
+        <div class="scrollbar" id="style-2">
+            
+            {parseData(productList)} 
+            
         </div>
     )
 }

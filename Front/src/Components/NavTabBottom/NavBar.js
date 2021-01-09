@@ -20,26 +20,12 @@ import { Profile } from '../Profile/Profile';
 import ModalL from '../Signup/PopupLogin';
 import ProfileEdit from '../ProfileEdit/ProfileEdit';
 import UserContext from '../../Contexts/userContext';
+import GetProducts from '../SearchBar/searchPage';
 
 const NavBar = () => {
   const { userInfo } = useContext(UserContext);
-  // const [userId, setUserId] = useState();
-//   const fetchUser = () =>{
-//     const url ="http://localhost:8888/User"
-//     // fetch(url, {
-//     //     credentials: "include"
-//     //   })
-//     // .then(response => response.json())
-//     // .then(data => {
-//     //     console.log(data)
-//     //     setUserId(data[0].idUser)
-//     //     console.log(userId);
-//     // })
-// }
-// fetchUser()
-
+ 
     return(
-      
       <Router>
       <div className="Bottom">
           <div className= "Home">
@@ -61,6 +47,7 @@ const NavBar = () => {
             
             
         <Switch>
+
           <Route exact path="/">
           </Route>
           <Route path="/favs" >
@@ -78,7 +65,10 @@ const NavBar = () => {
           <Route path ="/loginP">
             <ModalL />
           </Route>
-          
+          <Route path ="/search">
+            <GetProducts />
+          </Route>
+
         </Switch>
       </div>
     </Router>

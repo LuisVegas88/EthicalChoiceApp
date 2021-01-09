@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState } from 'react';
 import Register from '../Register/Register';
 
 import './Signup.css'
@@ -6,10 +6,12 @@ import './Signup.css'
 
 export const Signup = () =>{
 
+    const [productList, setProductList] = useState([])
+
     return (
         
         <div className= "global">
-            <Register />
+            <Register value={ productList, setProductList}/>
         </div>
      
     )

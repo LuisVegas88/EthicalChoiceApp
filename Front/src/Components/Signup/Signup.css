@@ -1,13 +1,14 @@
 .global {
     position: absolute;
-    top:0px;
+    top:-612px;
     left:0px;
     background-image:url(../../imagenes/FondoRegister.png);
     background-size: cover;
-    height: 588px;
+    height: 611px;
     width: 375px;
     margin-top: 0px;
-    font-family: Noto Sans KR;
+    font-family: 'Noto Sans', sans-serif;
+    overflow: hidden;
   
 }
 .mainContainer{

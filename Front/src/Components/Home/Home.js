@@ -1,6 +1,6 @@
-import React, { useContext }  from 'react';
+import React,{useState}  from 'react';
 import './home.css';
-import userContext from "../../Contexts/userContext";
+import GetProducts from '../SearchBar/searchPage';
 
 
 const Home = () =>{
@@ -8,7 +8,11 @@ const Home = () =>{
     const Quote = Quotes[Math.floor(Math.random() * Quotes.length)];
 
     return (
+        
         < div className="Fondo">
+            
+            <GetProducts />
+            
             <p id="Quote">{Quote}</p>
 
         </div>
