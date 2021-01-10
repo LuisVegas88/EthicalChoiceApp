@@ -396,12 +396,15 @@ server.get("/searchProducts/Details", (req, res) => {
 		}
 		if(result){
 			const Product = {
-				"Id":product.idProduct,
+				"Id":result.idProduct,
 				"Name": result[0].Name,
 				"Img": result[0].Picture,
 				"Brand": result[0].Brand,
+				"Price":result[0].Price,
 				"Description": result[0].Description,
-				"Ingredients": result[0].Ingredients
+				"Ingredients": result[0].Ingredients,
+				"Sello": result[0].Sello
+				
 			}
 			console.log(Product);
 			res.send(Product);

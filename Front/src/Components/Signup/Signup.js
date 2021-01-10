@@ -6,12 +6,12 @@ import './Signup.css'
 
 export const Signup = () =>{
 
-    const [productList, setProductList] = useState([])
+    
 
     return (
         
         <div className= "global">
-            <Register value={ productList, setProductList}/>
+            <Register />
         </div>
      
     )

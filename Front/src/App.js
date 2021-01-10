@@ -1,32 +1,30 @@
 
-import  React, {Context, useState} from 'react';
+import  React, { useState} from 'react';
 import Home from './Components/Home/Home.js'
 
 import NavBar from './Components/NavTabBottom/NavBar.js';
 
-
-import Login from './Components/LogIn/LogIn';
-import Register from './Components/Register/Register'
-import GetProducts from './Components/SearchBar/searchPage.js';
 import {UserProvider} from "./Contexts/userContext";
+import {ProductProvider} from "./Contexts/ProductContext";
 
 
 const App = ()=> {
   const [userInfo, setUserInfo] = useState(null);
-  // const context = useContext(contextValue)
+  const [idProduct, setIdProduct] = useState(null)
+ 
   return (
-    // <NavigationContainer>
 
     <div className="App">
       <Home />
       <UserProvider value={{userInfo, setUserInfo}}>
+      <ProductProvider value={{idProduct, setIdProduct}}>
         <NavBar className="NavBottom"/>
+      </ProductProvider>
       </UserProvider>
       
       
     </div>
    
-    // </NavigationContainer>
   );
 }
 

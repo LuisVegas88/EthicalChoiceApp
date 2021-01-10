@@ -21,6 +21,9 @@ import ModalL from '../Signup/PopupLogin';
 import ProfileEdit from '../ProfileEdit/ProfileEdit';
 import UserContext from '../../Contexts/userContext';
 import GetProducts from '../SearchBar/searchPage';
+import {ProductDetail} from '../ProductDetail/ProductDetail';
+
+
 
 const NavBar = () => {
   const { userInfo } = useContext(UserContext);
@@ -67,6 +70,9 @@ const NavBar = () => {
           </Route>
           <Route path ="/search">
             <GetProducts />
+          </Route>
+          <Route path ="/detail">
+            <ProductDetail />
           </Route>
 
         </Switch>
