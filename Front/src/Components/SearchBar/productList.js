@@ -40,19 +40,19 @@ const ProductList = ({search,vegan,eco,cruelty}) => {
        
         redirect("/Detail")
     }
-    // const fechFav = async() => {
-    //     const url = `http://localhost:8888/AddFav`;
-    //     await fetch(url)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         console.log(data);
-    //     });
-    // }
+    const fechFav = async() => {
+        const url = `http://localhost:8888/AddFav`;
+        await fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        });
+    }
    
-    // const handleFav = (e) =>{
-    //     e.preventDefault();
-    //     fechFav();
-    // }
+    const handleFav = (e) =>{
+        e.preventDefault();
+        fechFav();
+    }
 
     const parseData = (productList) => {
         if (loading)
