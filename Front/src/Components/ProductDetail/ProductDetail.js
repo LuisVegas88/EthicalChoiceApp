@@ -60,7 +60,7 @@ export const ProductDetail =()=>{
             </div>
             <div id="ProductImg">
                  <img id="hoja" src={hoja} alt="Hoja"></img>
-                <div id="circle"></div>
+                <div id="circle2"></div>
                 <img id="productimg" src={productDetail.Img} alt="producto"></img>
 
             </div>
