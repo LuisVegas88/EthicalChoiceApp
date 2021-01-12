@@ -4,13 +4,13 @@ import './Productlist.css';
 import linea from '../../imagenes/linea.png'
 import like from '../../imagenes/like.svg'
 import {useRedirect} from '../../Hooks/useRedirect';
-import { BrowserRouter as Router,Redirect } from 'react-router-dom';
-import ProductDetail from '../ProductDetail/ProductDetail';
-// import ProductContext from '../../Contexts/ProductContext'
+
+
+import ProductContext from '../../Contexts/ProductContext'
 
 const ProductList = ({search,vegan,eco,cruelty}) => {
-   
-    // const {setIdProduct}= useContext(ProductContext);
+    const ProductDetailCxt = useContext(ProductContext)
+    
     const redirect = useRedirect();
 
     const fetchData = async(search, setLoading, setProduct, setError) => {
@@ -20,65 +20,58 @@ const ProductList = ({search,vegan,eco,cruelty}) => {
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data)
                     if (data.error)
                     setError(data.error)
                     else
-                    setProduct(data);
-                    setLoading(false);
+                       setProduct(data);
+                        setLoading(false);  
+                    
+                   
                 } )
                 .catch((error) => {
                     setError(error.message);
                     setLoading(false);
                 });
     }
-    const handleDetail =(e) =>{
-        e.preventDefault()
-        // setIdProduct({
-        //     idProduct: e.currentTarget.getAttribute("id")
-        // })
-        console.log(e.currentTarget.getAttribute("id"))
-       
-        redirect("/Detail")
-    }
-    const fechFav = async() => {
-        const url = `http://localhost:8888/AddFav`;
-        await fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-        });
-    }
    
-    const handleFav = (e) =>{
-        e.preventDefault();
-        fechFav();
+    
+    const PintarProducto = ({Brand,Name,Img,onClick}) =>{
+        return (
+            <div id="ContenedorP" onClick={onClick}>
+                <div id="circle"></div>
+                <img id="AddFav" src={like} alt="likeicon" ></img> 
+                            
+                <img id="linea" src={linea} alt="linea"></img>
+                <p id="brand">{Brand}</p>
+                <p id ="nameP">{Name}</p>
+                <img id="imgP" src={Img} alt={`${Name}`}  />
+            </div> 
+        )
     }
-
     const parseData = (productList) => {
         if (loading)
         return <p>Loading ...</p>
         else if (error)
         return <p>{error}</p>
         else
-        return productList.map(product => (
-         
-            <div key={product.Id} id={product.Id} onClick={handleDetail} >
-                <div id="ContenedorP" >
-                    <div id="circle"></div>
-                    <img id="AddFav" src={like} alt="likeicon" ></img> 
-                                
-                    <img id="linea" src={linea} alt="linea"></img>
-                    <p id="brand">{product.Brand}</p>
-                    <p id ="nameP">{product.Name}</p>
-                    <img id="imgP" src={product.Img} alt={`${product.Name}`}  />
-                </div>    
-            </div>
-           
+        return productList.map(product => {
+            const {Id,Brand,Name,Img}= product
+            
+            return (<div key={Id} id={Id} >
+                <PintarProducto 
+                    onClick={(e)=>{
+                        console.log("entra")
+                        redirect("/Detail",e)
+                        ProductDetailCxt.setIdProduct({ 
+                            ...ProductDetailCxt,Id
+                        });    
+                    }} Brand={Brand} Name={Name} Img={Img}/>
+            </div>  )  
+        })
                     
                     
-        ));
     }
-                
     const [productList, setProductList] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -109,6 +102,5 @@ const ProductList = ({search,vegan,eco,cruelty}) => {
         </div>
     )
 }
-
 export default ProductList;
 

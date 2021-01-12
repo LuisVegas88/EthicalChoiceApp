@@ -1,5 +1,5 @@
 .global {
-    position: absolute;
+    
     top:-612px;
     left:0px;
     background-image:url(../../imagenes/FondoRegister.png);
@@ -86,7 +86,7 @@ input{
     position: absolute;
     width: 200px;
     height: 32px;
-    left: calc(50% - 200px/2 - 0.5px);
+    left: 85px;
     top: 415px;
     /* background: #007CBA; */
     background:#2D6A4F;
@@ -106,7 +106,7 @@ input{
     position: absolute;
     width: 200px;
     height: 32px;
-    left: calc(50% - 200px/2 - 0.5px);
+    left: 85px;
     top: 448px;
     background: #E5B6A7;
     border: none;
@@ -154,7 +154,7 @@ input{
     margin-top: 4px;
 }
 .backgroundModal{
-    position: absolute;
+    
           top: 0;
           left: 0;
           bottom: 0;
@@ -164,17 +164,14 @@ input{
           /* Filter: blur(5px); */
 }
 #Sesion{
-    position: absolute;
-    width: 200px;
-    left: calc(50% - 200px/2 - 0.5px);
-    top: 504px;
+   
+    position: relative;
+    top:97px;
     font-family: Noto Sans KR;
     font-style: normal;
     font-weight: 300;
     font-size: 13px;
     line-height: 114%;
-    /* or 14px */
-
     text-align: center;
     letter-spacing: 0.2px;
     text-decoration: none;
@@ -182,5 +179,5 @@ input{
 
 }
 #EditP{
-    position:absolute;
+   
 }

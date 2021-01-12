@@ -550,24 +550,37 @@ server.put("/User/Edit/", (req, res) => {
 ///USER'S FAVS LIST //
 
 server.get("/Favs", (req, res) => {
-	if(JWT.verifyJWT(req.cookies.jwt))
+	
+	if (req.cookies.jwt && JWT.verifyJWT(req.cookies.jwt))
 	{
 		const {idUser} = JWT.getJWTInfo(req.cookies.jwt);
+		
 		if(idUser)
 		{
 			let connection = openDB();
-			connection.query(`SELECT p.Name, p.Brand, p.Category, p.Picture FROM Products AS p JOIN Favs as f ON p.idProduct = f.idProduct WHERE f.idUser = ?`, [idUser],(err,result)=>{
+			connection.query(`SELECT p.idProduct, p.Name, p.Brand, p.Category, p.Picture FROM Products AS p JOIN Favs as f ON p.idProduct = f.idProduct WHERE f.idUser = ?`, [idUser],(err,result)=>{
 			if (err) {
 				res.send(err);
 			}
 			if(result){
-				res.send(result);
+
+				const Product = result.map(product => {
+					return {
+						"Id":product.idProduct,
+						"Name": product.Name,
+						"Img": product.Picture,
+						"Brand": product.Brand
+					}
+				});
+				console.log(Product);
+				res.send(Product)
 			}
 			})
 			connection.end();
 		}
 		else
-			res.send({"error": "No JWT from this User"});	
+			res.send({"error": "No JWT from this User"});
+		
 	}
 	else
 		res.send({"error": "No JWT"});

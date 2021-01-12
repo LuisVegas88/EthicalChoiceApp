@@ -17,10 +17,7 @@ const  GetProducts = () => {
 
     return(
 
-        <Router>
-
             <div className="SearchBar">
-            { input && <Redirect to= "/search"/>}   
             <SearchBar  input={input} setInput={setInput}/>
                 
             <Filter 
@@ -29,10 +26,6 @@ const  GetProducts = () => {
                 cruelty ={cruelty} setCruelty ={setCruelty} />
             <ProductList search={input} vegan={vegan} eco={eco} cruelty={cruelty}/>
             </div>
-       
-        </Router>
-
-
 
     )
 

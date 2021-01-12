@@ -1,19 +1,19 @@
-import React, {useState } from 'react';
-import Register from '../Register/Register';
+// import React, {useState } from 'react';
+// import Register from '../Register/Register';
 
-import './Signup.css'
+// import './Signup.css'
 
 
-export const Signup = () =>{
+// export const Signup = () =>{
 
     
 
-    return (
+//     return (
         
-        <div className= "global">
-            <Register />
-        </div>
+//         <div className= "global">
+//             <Register />
+//         </div>
      
-    )
+//     )
 
-}
+// }

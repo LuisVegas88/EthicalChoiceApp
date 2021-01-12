@@ -7,77 +7,36 @@ import Favlogo from '../../imagenes/Fav.png';
 import FavlogoG from '../../imagenes/FavG.png';
 import Proflogo from '../../imagenes/Prof.png';
 import ProflogoG from '../../imagenes/ProfG.png';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-  } from "react-router-dom";
+
 // import { Profile } from '../Profile/Profile';
-import {Home} from '../Home/Home';
-import { Signup } from '../Signup/Signup';
-import { Profile } from '../Profile/Profile';
-import ModalL from '../Signup/PopupLogin';
-import ProfileEdit from '../ProfileEdit/ProfileEdit';
+
+
 import UserContext from '../../Contexts/userContext';
-import GetProducts from '../SearchBar/searchPage';
-import {ProductDetail} from '../ProductDetail/ProductDetail';
 
 
+import {useRedirect} from '../../Hooks/useRedirect';
 
 const NavBar = () => {
   const { userInfo } = useContext(UserContext);
- 
+  const redirect = useRedirect();
     return(
-      <Router>
+      
       <div className="Bottom">
           <div className= "Home">
-            <Link to="/" >
-            <HoverImage className="HomeLogo" src={Homelogo} hoverSrc={HomelogoG}  alt={"logoG"} />
-            </Link > 
+    
+            <HoverImage className="HomeLogo" src={Homelogo} hoverSrc={HomelogoG}  alt={"logoG"} onClick={(e)=>redirect("/")}/>
+            
           </div>
           <div className ="Favs">
-            <Link to="/favs">
-            <HoverImage className="FavLogo" src={Favlogo} hoverSrc={FavlogoG}  alt={"logofavG"} />
-            </Link >
+            
+            <HoverImage className="FavLogo" src={Favlogo} hoverSrc={FavlogoG}  alt={"logofavG"} onClick={(e)=>redirect("/favs")} />
+           
           </div>    
           <div className ="Profile">
+            <HoverImage className="ProfLogo" src={Proflogo} hoverSrc={ProflogoG}  alt={"ProfG"} onClick={(e)=>redirect( userInfo? "/profile" : "/signup",e)}/>
             
-            <Link  to={userInfo ? "/profile" : "/signup"}>
-            <HoverImage className="ProfLogo" src={Proflogo} hoverSrc={ProflogoG}  alt={"ProfG"} />
-            </Link >
           </div>
-            
-            
-        <Switch>
-
-          <Route exact path="/">
-          </Route>
-          <Route path="/favs" >
-            {/* <About /> */}
-          </Route>
-          <Route path="/signup">
-            <Signup />
-          </Route>
-          <Route path ="/profile">
-            <Profile />
-          </Route>
-          <Route path ="/editProfile">
-            <ProfileEdit/>
-          </Route>
-          <Route path ="/loginP">
-            <ModalL />
-          </Route>
-          <Route path ="/search">
-            <GetProducts />
-          </Route>
-          <Route path ="/detail">
-            <ProductDetail />
-          </Route>
-
-        </Switch>
       </div>
-    </Router>
     )
       
 }

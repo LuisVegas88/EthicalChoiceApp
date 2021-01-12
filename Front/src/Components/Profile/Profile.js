@@ -31,7 +31,6 @@ export const Profile = () => {
                             userImg: data[0].Avatar
                         
                         })
-                    
                 })
         }
     }

@@ -7,8 +7,10 @@ import logoGoogle from '../../imagenes/google.png';
 import { useRedirect } from '../../Hooks/useRedirect';
 import { Link,useHistory } from 'react-router-dom';
 import LoginGoogle from '../GoogleOAuth/Google'  
+import '../Signup/Signup.css'
 
 import {useCookies} from 'react-cookie';
+import NavBar from '../NavTabBottom/NavBar';
 
 const Register = () => {
     
@@ -86,6 +88,7 @@ const Register = () => {
 
     return (
         <>
+         <div className= "global">
             <div className ="mainContainer">
                 <h3 id="miP">Mis datos</h3>
                 <form >
@@ -145,6 +148,8 @@ const Register = () => {
                     <Link id="Sesion" to={"/loginP"}>¿Ya tienes cuenta? Iniciar Sesion</Link>
 
                 </form>
+            </div>
+           
             </div>
         </>
     )

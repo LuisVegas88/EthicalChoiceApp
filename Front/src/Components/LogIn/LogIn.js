@@ -36,6 +36,13 @@ export const Login = () => {
             if(data === "Logged¡"){
                 console.log("FUNCIONA")
                 Redirect("/profile")}
+            if(data === "Wrong credentials"){
+               alert("Wrong Credentials") 
+            }
+            if(data === "Insert all credentials"){
+                alert("Insert all credentials")
+            }
+         
         })
 
     }

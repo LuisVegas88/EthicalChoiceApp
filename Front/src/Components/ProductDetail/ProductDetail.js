@@ -1,5 +1,5 @@
 
-import React ,{useState,useEffect} from 'react';
+import React ,{useState,useEffect,useContext} from 'react';
 // import ProductContext from '../../Contexts/ProductContext'
 import hoja from '../../imagenes/Hoja.svg';
 import back from '../../imagenes/back.svg';
@@ -16,18 +16,18 @@ import {
     AccordionItemPanel,
 } from 'react-accessible-accordion';
 import ShowMoreText from 'react-show-more-text';
-
+import ProductContext from '../../Contexts/ProductContext'
 
 export const ProductDetail =()=>{
-    
+    console.log("Detalles de Producto")
     const [productDetail, setProductDetail] = useState("")
     const redirect = useRedirect();
-    // const {idProduct} = useContext(ProductContext)
-    const idProduct=29
+    const ProductDetailCxt = useContext(ProductContext)
+    console.log("este es el id",ProductDetailCxt.Id)
     // console.log(idProduct)
     const fetchData = async()=>{
         
-        const url = `http://localhost:8888/searchProducts/details/?search=${idProduct}`;
+        const url = `http://localhost:8888/searchProducts/details/?search=${ProductDetailCxt.Id}`;
             fetch (url)
                 .then(response => response.json())
                 .then(data => {
@@ -43,7 +43,7 @@ export const ProductDetail =()=>{
                             Ingredients:data.Ingredients,
                             Sello:data.Sello 
                         })
-                        console.log("Este es su producto:",productDetail)    
+                        
                     }
                 })
     }
@@ -55,7 +55,7 @@ export const ProductDetail =()=>{
     return(
         <div id="productDetail">
             <div id="head">
-                <img id="back" src={back} alt="goBack"></img>
+                <img id="back" src={back} alt="goBack" onClick={(e)=>(redirect("/"),e)}></img>
                 <img id="fav" src={fav} alt="fav"></img>
             </div>
             <div id="ProductImg">
