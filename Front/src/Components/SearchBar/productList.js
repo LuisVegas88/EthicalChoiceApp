@@ -1,8 +1,9 @@
 
 import React, { useEffect, useState,useContext } from 'react';
 import './Productlist.css';
-import linea from '../../imagenes/linea.png'
+import linea from '../../imagenes/lineaBlanca.svg'
 import like from '../../imagenes/like.svg'
+import visitas from '../../imagenes/visitas.svg'
 import {useRedirect} from '../../Hooks/useRedirect';
 
 
@@ -36,17 +37,26 @@ const ProductList = ({search,vegan,eco,cruelty}) => {
     }
    
     
-    const PintarProducto = ({Brand,Name,Img,onClick}) =>{
+    const PintarProducto = ({Brand,Name,Img, Price,onClick}) =>{
         return (
             <div id="ContenedorP" onClick={onClick}>
-                <div id="circle"></div>
-                <img id="AddFav" src={like} alt="likeicon" ></img> 
-                 {Math.floor(Math.random()*100) }        
-                <img id="linea" src={linea} alt="linea"></img>
-                <p id="brand">{Brand}</p>
-                <p id ="nameP">{Name}</p>
-                <img id="imgP" src={Img} alt={`${Name}`}  />
-            </div> 
+                <div>
+                    <div id="circle"></div>
+                    <img id="imgP" src={Img} alt={`${Name}`}  />
+                </div>
+                <div id="info">
+                    <p id="brand">{Brand}</p>
+                    <p id ="nameP">{Name}</p>
+                    <img id="AddFav" src={like} alt="likeicon" ></img> 
+                 
+                    <p id="NumberLikes">{Math.floor(Math.random()*100) } </p> 
+                    <img id="visitas" src={visitas} alt="visitas" ></img> 
+                    <p id="NumberVisitas">{Math.floor(Math.random()*100) } </p> 
+                    <img id="linea" src={linea} alt="linea"></img>
+                </div>
+              
+            </div>  
+            
         )
     }
     const parseData = (productList) => {
@@ -56,7 +66,7 @@ const ProductList = ({search,vegan,eco,cruelty}) => {
         return <p>{error}</p>
         else
         return productList.map(product => {
-            const {Id,Brand,Name,Img, IdFav}= product
+            const {Id,Brand,Name,Price,Img, IdFav}= product
             
             return (<div key={Id} id={Id} >
                 <PintarProducto 
@@ -66,7 +76,7 @@ const ProductList = ({search,vegan,eco,cruelty}) => {
                         ProductDetailCxt.setIdProduct({ 
                             ...ProductDetailCxt,Id,IdFav,
                         });    
-                    }} Brand={Brand} Name={Name} Img={Img} IdFav={IdFav}/>
+                    }} Brand={Brand} Name={Name} Price={Price} Img={Img} IdFav={IdFav} />
             </div>  )  
         })
                     

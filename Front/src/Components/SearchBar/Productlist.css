@@ -53,7 +53,7 @@
 #nameP{
     position: relative;
     left:160px;
-    top:-128px;
+    top:-148px;
     max-width: 182px;
     font-family: 'Noto Sans', sans-serif;
     font-style: normal;
@@ -66,7 +66,7 @@
 #brand{
     position: relative;
     left:160px;
-    top:-120px;
+    top:-125px;
     max-width: 150px;
     font-family: 'Noto Sans', sans-serif;
     font-style: normal;
@@ -79,25 +79,23 @@
 
 #imgP{
     position: relative;
-    left:48px;
-    top:-191px;
+    left:50px;
+    top:-80px;
     max-width: 56px;
     z-index: 1px;
     height: 82px;
 }
 
 #linea{
-    position:relative;
-    max-width: 340px;
-    height:1.2px;
-    left:4px;
-    margin-bottom: 7px;
-     
+    position:absolute;
+    margin-top:-8px;
+    margin-left: 4px;
+    height:1px;
 }
 
 #AddFav{
-    position: relative;
-    top:-162px;
+    position: absolute;
+    top:-64px;
     left:160px;
 }
 
@@ -190,4 +188,50 @@
     opacity:70%;
     left:300px;
     top:0px;
+}
+#price2{
+  
+    font-family: 'Noto Sans', sans-serif;
+    
+    font-weight: 100;
+    font-size: 10px;
+    line-height: 114%;
+    
+    color: #A8A8A8;
+}
+#NumberLikes{
+    position: absolute;
+    font-family: 'Noto Sans', sans-serif;
+    left:176px;
+    top:-74px;
+   
+    font-weight: 100;
+    font-size: 10px;
+    line-height: 114%;
+    
+    color: #A8A8A8;
+
+}
+#NumberVisitas{
+    position: absolute;
+    font-family: 'Noto Sans', sans-serif;
+    left:228px;
+    top:-74px;
+    font-weight: 100;
+    font-size: 10px;
+    line-height: 114%;
+    
+    color: #A8A8A8;
+
+}
+ #info{
+     display:flex;
+     flex-direction: column;
+     position:relative;
+     top:-45px;
+ }
+ #visitas{
+    position:absolute;
+    top:-64px;
+    margin-left:205px; 
 }

@@ -2,7 +2,7 @@
 .react-toggle {
     touch-action: pan-x;
 
-    left:60px;
+    left:55px;
     top:-50px;
     margin-left: 30px;
 
@@ -167,17 +167,17 @@
 
   position:relative;
   top:-70px;
-  left:95px;
+  left:90px;
 }
 
 #et{
   position:relative;
   top:-108px;
-  left:180px;
+  left:175px;
 }
 
 #ct{
   position:relative;
   top:-146px;
-  left:248px;
+  left:243px;
 }

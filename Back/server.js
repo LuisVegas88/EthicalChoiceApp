@@ -375,7 +375,8 @@ server.get("/searchProducts", (req, res) => {
 					"Id":product.idProduct,
 					"Name": product.Name,
 					"Img": product.Picture,
-					"Brand": product.Brand
+					"Brand": product.Brand,
+					"Price":product.Price,
 				}
 			});
 			console.log(Product);
