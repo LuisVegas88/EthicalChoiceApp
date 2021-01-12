@@ -10,7 +10,7 @@ import ProductContext from '../../Contexts/ProductContext'
 
 const ProductList = ({search,vegan,eco,cruelty}) => {
     const ProductDetailCxt = useContext(ProductContext)
-    
+   
     const redirect = useRedirect();
 
     const fetchData = async(search, setLoading, setProduct, setError) => {
@@ -41,7 +41,7 @@ const ProductList = ({search,vegan,eco,cruelty}) => {
             <div id="ContenedorP" onClick={onClick}>
                 <div id="circle"></div>
                 <img id="AddFav" src={like} alt="likeicon" ></img> 
-                            
+                 {Math.floor(Math.random()*100) }        
                 <img id="linea" src={linea} alt="linea"></img>
                 <p id="brand">{Brand}</p>
                 <p id ="nameP">{Name}</p>
@@ -56,7 +56,7 @@ const ProductList = ({search,vegan,eco,cruelty}) => {
         return <p>{error}</p>
         else
         return productList.map(product => {
-            const {Id,Brand,Name,Img}= product
+            const {Id,Brand,Name,Img, IdFav}= product
             
             return (<div key={Id} id={Id} >
                 <PintarProducto 
@@ -64,9 +64,9 @@ const ProductList = ({search,vegan,eco,cruelty}) => {
                         console.log("entra")
                         redirect("/Detail",e)
                         ProductDetailCxt.setIdProduct({ 
-                            ...ProductDetailCxt,Id
+                            ...ProductDetailCxt,Id,IdFav,
                         });    
-                    }} Brand={Brand} Name={Name} Img={Img}/>
+                    }} Brand={Brand} Name={Name} Img={Img} IdFav={IdFav}/>
             </div>  )  
         })
                     

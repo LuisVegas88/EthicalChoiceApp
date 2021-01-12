@@ -7,14 +7,19 @@ import Home from '../Home/Home'
 import '../SearchBar/Productlist.css';
 import {useRedirect} from '../../Hooks/useRedirect';
 import ProductContext from '../../Contexts/ProductContext'
+
+
 export const Favs = () =>{
 
     const {userInfo} = useContext(UserContext)
+    console.log("ID Usuario",userInfo)
     const [productList, setProductList] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const redirect = useRedirect();
     const ProductDetailCxt = useContext(ProductContext)
+    // console.log("Context de ProductLis", ProductDetailCxt)
+    
 
     const fecthData = async (setLoading,setProduct,setError) =>{
         const url = `http://localhost:8888/Favs/?idUser=${userInfo}`
@@ -41,13 +46,34 @@ export const Favs = () =>{
         
     }
 
+    const DeleteFav = async (IdFav)=>{
+        return new Promise ((resolve)=>{
+             const url = `http://localhost:8888/DeleteFav/?idfav=${IdFav}`
+            fetch(url) 
+            .then(response=>response.json())
+            .then(data=> {
+                console.log(data)
+                resolve()
+        })  
+        })
+       
+            
+    }
+
+    const HandleDelete =(IdFav)=>{
+        DeleteFav(IdFav)
+            .then(()=>{
+                fecthData(setLoading,setProductList,setError)
+            })
+        
+    }
     
-    const PintarProducto = ({Brand,Name,Img,onClick}) =>{
+    const PintarProducto = ({Brand,Name,Img,onClick,IdFav}) =>{
         return (
             <div id="ContenedorP" >
                 <div id="circle"></div>
                 <img id="AddFav" src={like} alt="likeicon" ></img> 
-                <img id="DeleteFav" src={close} alt="closeicon" ></img> 
+                <img id="DeleteFav" src={close} alt="closeicon" onClick={()=>HandleDelete(IdFav)}></img> 
                             
                 <img id="linea" src={linea} alt="linea"></img>
                 <p id="brand">{Brand}</p>
@@ -63,17 +89,17 @@ export const Favs = () =>{
             return <p>{error}</p>
             else
             return productList.map(product => {
-                const {Id,Name,Img,Brand}= product
-                
+                const {Id,Name,Img,Brand,IdFav}= product
+                console.log("INFO PRODUCTO",ProductDetailCxt)
                 return (
                     <div key={Id} id={Id} >
                         <PintarProducto 
                             onClick={(e)=>{
                                 redirect("/Detail",e)
                                 ProductDetailCxt.setIdProduct({ 
-                                    ...ProductDetailCxt,Id
+                                    ...ProductDetailCxt,Id,IdFav
                                 });    
-                            }} Name={Name} Img={Img} Brand={Brand} />
+                            }} Name={Name} Img={Img} Brand={Brand} IdFav={IdFav}  />
                     </div>
     
                 )  

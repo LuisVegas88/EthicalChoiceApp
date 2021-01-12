@@ -22,6 +22,7 @@ import ProfileEdit from './Components/ProfileEdit/ProfileEdit';
 import GetProducts from './Components/SearchBar/searchPage';
 import { ProductDetail } from './Components/ProductDetail/ProductDetail';
 import {Favs} from  './Components/Favs/favs'
+import MapView from './Components/Map/Map.js';
 
 const App = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -33,7 +34,25 @@ const App = () => {
       
       <Router>
         <Switch>
-          <Route exact path="/">
+
+          <Route path="/editProfile">
+          <UserProvider value={{ userInfo, setUserInfo }}>
+            <ProductProvider value={{ idProduct, setIdProduct }}>
+              <ProfileEdit />
+              </ProductProvider>
+            </UserProvider>
+          </Route>
+          <Route path="/loginP">
+          <UserProvider value={{ userInfo, setUserInfo }}>
+            <ProductProvider value={{ idProduct, setIdProduct }}>
+            <ModalL />
+            </ProductProvider>
+          </UserProvider>
+          </Route>
+
+          <Route>
+
+            <Route exact path="/">
             <UserProvider value={{ userInfo, setUserInfo }}>
               <ProductProvider value={{ idProduct, setIdProduct }}>
                 <Home />
@@ -67,21 +86,6 @@ const App = () => {
             </UserProvider>
           </Route>
 
-          <Route path="/editProfile">
-          <UserProvider value={{ userInfo, setUserInfo }}>
-            <ProductProvider value={{ idProduct, setIdProduct }}>
-              <ProfileEdit />
-              </ProductProvider>
-            </UserProvider>
-          </Route>
-
-          <Route path="/loginP">
-          <UserProvider value={{ userInfo, setUserInfo }}>
-            <ProductProvider value={{ idProduct, setIdProduct }}>
-            <ModalL />
-            </ProductProvider>
-          </UserProvider>
-          </Route>
 
           <Route path="/search">
             <ProductProvider value={{ ...idProduct, setIdProduct }}>
@@ -97,15 +101,24 @@ const App = () => {
             </UserProvider>
           </Route>
 
-        </Switch>
+          <Route path ="/map">
+            <MapView />
+          </Route>
 
-      <UserProvider value={{ userInfo, setUserInfo }}>
+        
 
-        <NavBar className="NavBottom" />
+        <UserProvider value={{ userInfo, setUserInfo }}>
 
-      </UserProvider>
+          <NavBar className="NavBottom" />
+
+        </UserProvider>
+          
+
+          
+
+      </Route>
+      </Switch>
       </Router>
-
 
     </div>
 

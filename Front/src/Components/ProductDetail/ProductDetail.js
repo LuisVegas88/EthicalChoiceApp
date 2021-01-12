@@ -1,9 +1,13 @@
 
 import React ,{useState,useEffect,useContext} from 'react';
-// import ProductContext from '../../Contexts/ProductContext'
+
 import hoja from '../../imagenes/Hoja.svg';
 import back from '../../imagenes/back.svg';
+
+import HoverImage from "react-hover-image";
+import favred from '../../imagenes/favred.svg';
 import fav from '../../imagenes/fav2.svg';
+
 import line from '../../imagenes/line2.svg';
 import './ProductDetail.css';
 import { useRedirect } from '../../Hooks/useRedirect';
@@ -16,14 +20,24 @@ import {
     AccordionItemPanel,
 } from 'react-accessible-accordion';
 import ShowMoreText from 'react-show-more-text';
-import ProductContext from '../../Contexts/ProductContext'
+import ProductContext from '../../Contexts/ProductContext';
+import UserContext from "../../Contexts/userContext";
+
+
 
 export const ProductDetail =()=>{
-    console.log("Detalles de Producto")
-    const [productDetail, setProductDetail] = useState("")
+
+    console.log("Detalles de Producto");
+    const [productDetail, setProductDetail] = useState("");
     const redirect = useRedirect();
-    const ProductDetailCxt = useContext(ProductContext)
-    console.log("este es el id",ProductDetailCxt.Id)
+
+    const ProductDetailCxt = useContext(ProductContext);
+    console.log("ID de Producto",ProductDetailCxt.Id);
+
+    const {userInfo} = useContext(UserContext)
+    console.log("ID de Usuario", userInfo)
+
+
     // console.log(idProduct)
     const fetchData = async()=>{
         
@@ -47,16 +61,36 @@ export const ProductDetail =()=>{
                     }
                 })
     }
+
+    const AddFav = async()=>{
+
+        const url = `http://localhost:8888/AddFav/?idUser=${userInfo}&idProduct=${ProductDetailCxt.Id}`;
+            fetch (url, {
+                credentials: "include", 
+                method: "PUT",
+                headers:{
+                    'Content-Type': 'application/json'
+                }, 
+            })
+            .then(response => response.json())       
+    }
+
+
     useEffect(() => {
        fetchData()
     }, []);
-    
+
+    const HandleAdd =(e)=>{
+        e.preventDefault()
+        AddFav()
+    }
     
     return(
         <div id="productDetail">
             <div id="head">
                 <img id="back" src={back} alt="goBack" onClick={(e)=>(redirect("/"),e)}></img>
-                <img id="fav" src={fav} alt="fav"></img>
+                <HoverImage className="fav2" src={fav} hoverSrc={favred} alt={"logoFavAdd"} onClick={HandleAdd}/>
+                
             </div>
             <div id="ProductImg">
                  <img id="hoja" src={hoja} alt="Hoja"></img>

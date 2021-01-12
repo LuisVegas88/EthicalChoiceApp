@@ -558,7 +558,7 @@ server.get("/Favs", (req, res) => {
 		if(idUser)
 		{
 			let connection = openDB();
-			connection.query(`SELECT p.idProduct, p.Name, p.Brand, p.Category, p.Picture FROM Products AS p JOIN Favs as f ON p.idProduct = f.idProduct WHERE f.idUser = ?`, [idUser],(err,result)=>{
+			connection.query(`SELECT p.idProduct, p.Name, p.Brand, p.Category, p.Picture, f.idFavs FROM Products AS p JOIN Favs as f ON p.idProduct = f.idProduct WHERE f.idUser = ?`, [idUser],(err,result)=>{
 			if (err) {
 				res.send(err);
 			}
@@ -569,7 +569,8 @@ server.get("/Favs", (req, res) => {
 						"Id":product.idProduct,
 						"Name": product.Name,
 						"Img": product.Picture,
-						"Brand": product.Brand
+						"Brand": product.Brand,
+						"IdFav": product.idFavs,
 					}
 				});
 				console.log(Product);
@@ -624,7 +625,7 @@ server.get("/DeleteFav", (req, res) => {
 			res.send(err);
 		}
 		if(result){
-			res.send("Fav Deleted")
+			res.send({msg:"Fav Deleted"})
 		}
 	})
 	connection.end();
