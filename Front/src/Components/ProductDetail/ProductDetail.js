@@ -82,6 +82,7 @@ export const ProductDetail =()=>{
 
     const HandleAdd =(e)=>{
         e.preventDefault()
+        redirect( userInfo? "/favs" : "/signup",e)
         AddFav()
     }
     
