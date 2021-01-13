@@ -3,6 +3,7 @@ import UserContext from "../../Contexts/userContext";
 import linea from '../../imagenes/linea.png'
 import like from '../../imagenes/like.svg'
 import close from '../../imagenes/closeAdd.png'
+import visitas from '../../imagenes/visitas.svg'
 import Home from '../Home/Home'
 import '../SearchBar/Productlist.css';
 import {useRedirect} from '../../Hooks/useRedirect';
@@ -71,14 +72,23 @@ export const Favs = () =>{
     const PintarProducto = ({Brand,Name,Img,onClick,IdFav}) =>{
         return (
             <div id="ContenedorP" >
-                <div id="circle"></div>
-                <img id="AddFav" src={like} alt="likeicon" ></img> 
-                <img id="DeleteFav" src={close} alt="closeicon" onClick={()=>HandleDelete(IdFav)}></img> 
-                            
-                <img id="linea" src={linea} alt="linea"></img>
-                <p id="brand">{Brand}</p>
-                <p id ="nameP">{Name}</p>
-                <img id="imgP" src={Img} alt={`${Name}`} onClick={onClick} />
+                <div>
+                    <div id="circle"onClick={onClick}></div>  
+                    <img id="imgP" src={Img} alt={`${Name}`}  />
+                </div>
+                <div id="info2">
+                    <p id="brand2">{Brand}</p>
+                    <p id ="nameP2">{Name}</p>
+                    <img id="AddFav2" src={like} alt="likeicon" ></img> 
+                    <p id="NumberLikes2">{Math.floor(Math.random()*100) } </p> 
+                    <img id="visitas2" src={visitas} alt="visitas" ></img> 
+                    <p id="NumberVisitas2">{Math.floor(Math.random()*100) } </p> 
+                      <img id="DeleteFav" src={close} alt="closeicon" onClick={()=>HandleDelete(IdFav)}></img> 
+                                
+                    <img id="linea2" src={linea} alt="linea"></img>
+                
+                </div>
+              
             </div> 
         )
     }

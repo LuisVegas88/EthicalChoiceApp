@@ -22,7 +22,10 @@ import ProfileEdit from './Components/ProfileEdit/ProfileEdit';
 import GetProducts from './Components/SearchBar/searchPage';
 import { ProductDetail } from './Components/ProductDetail/ProductDetail';
 import {Favs} from  './Components/Favs/favs'
-import MapView from './Components/Map/Map.js';
+import MapView from './Components/Map/MapView.js';
+
+import './App.css'
+import TiendaDetail from './Components/TiendaDetail/TiendaDetail.js';
 
 const App = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -104,6 +107,11 @@ const App = () => {
           <Route path ="/map">
             <MapView />
           </Route>
+          <Route path ="/DetailShop">
+            <TiendaDetail />
+          </Route>
+          
+          
 
         
 

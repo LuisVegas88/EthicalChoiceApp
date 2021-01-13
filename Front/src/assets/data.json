@@ -1,0 +1,206 @@
+{
+    "venues": [
+        {
+            "Name": "Herbashop",
+            "Address": "Calle Alberto Aguilera,12",
+            "Phone": "91456789",
+            "Email": "infoHerbashop@gmail.com",
+            "geometry": [
+                40.4299,
+                -3.70788
+            ]
+        },
+        {
+            "Name": "Navarro",
+            "Address": "Calle de Alcalá,19",
+            "Phone": "917954231",
+            "Email": "Navarro@gmail.com",
+            "geometry": [
+                40.4179,
+                -3.69998
+            ]
+        },
+        {
+            "Name": "Herbolario Bravo Murillo",
+            "Address": "Calle Bravo Murillo,320",
+            "Phone": "914566789",
+            "Email": "BMherb@gmail.com",
+            "geometry": [
+                40.4638,
+                -3.69596
+            ]
+        },
+        {
+            "Name": "Herbolario Shakti",
+            "Address": "Calle Bravo Murillo, 90",
+            "Phone": "91456778",
+            "Email": "Shakti@gmail.com",
+            "geometry": [
+                40.434,
+                -3.70415
+            ]
+        },
+        {
+            "Name": "Doemi",
+            "Address": "Calle de Carranza,3",
+            "Phone": "914483043",
+            "Email": "infoDoemi@gmail.com",
+            "geometry": [
+                40.4289,
+                -3.70266
+            ]
+        },
+        {
+            "Name": "Mundo Natura",
+            "Address": "Calle de Fernando el Católico 2",
+            "Phone": "91679789",
+            "Email": "mundonatura@gmail.com",
+            "geometry": [
+                40.4339,
+                -3.70573
+            ]
+        },
+        {
+            "Name": "Herbolario Biofarm",
+            "Address": "Calle de Fernández de los Ríos 25",
+            "Phone": "918974265",
+            "Email": "Biofarm@gmail.com",
+            "geometry": [
+                40.435,
+                -3.7074
+            ]
+        },
+        {
+            "Name": "Natur House",
+            "Address": "Calle de Ferraz,94",
+            "Phone": "91478289",
+            "Email": "NaturHouse@gmail.com",
+            "geometry": [
+                40.4307,
+                -3.7216
+            ]
+        },
+        {
+            "Name": "Herbolario La Vita",
+            "Address": "Calle de Joaquín Bau,9",
+            "Phone": "91129789",
+            "Email": "lavitahb@gmail.com",
+            "geometry": [
+                40.4636,
+                -3.68687
+            ]
+        },
+        {
+            "Name": "Farmateca",
+            "Address": "Calle de Magallanes,13",
+            "Phone": "91458989",
+            "Email": "infoGFarmateca@gmail.com",
+            "geometry": [
+                40.4344,
+                -3.70579
+            ]
+        },
+        {
+            "Name": "Maurice Mességué",
+            "Address": "Calle de Magallanes,6",
+            "Phone": "91345569",
+            "Email": "mmherb@gmail.com",
+            "geometry": [
+                40.4327,
+                -3.70515
+            ]
+        },
+        {
+            "Name": "Lola Herbolarios",
+            "Address": "Calle de Narciso Serra,15",
+            "Phone": "918956532",
+            "Email": "infoLolaherb@gmail.com",
+            "geometry": [
+                40.4056,
+                -3.6785
+            ]
+        },
+        {
+            "Name": "Centro de dietética Petras",
+            "Address": "Calle de San Leonardo,73",
+            "Phone": "91458989",
+            "Email": "infoPetras@gmail.com",
+            "geometry": [
+                40.4248,
+                -3.71081
+            ]
+        },
+        {
+            "Name": "Herbolario Vallehermoso",
+            "Address": "Calle de Vallehermoso,40",
+            "Phone": "91758569",
+            "Email": "infoherbValle@gmail.com",
+            "geometry": [
+                40.4349,
+                -3.70849
+            ]
+        },
+        {
+            "Name": "Herbolario Santa Ana",
+            "Address": "Calle del Acuerdo,31",
+            "Phone": "916894536",
+            "Email": "infoSantAna@gmail.com",
+            "geometry": [
+                40.4289,
+                -3.70796
+            ]
+        },
+        {
+            "Name": "Los Girasoles",
+            "Address": "Corredera Baja de San Pablo 53",
+            "Phone": "94563429",
+            "Email": "losgirasoleshb@gmail.com",
+            "geometry": [
+                40.4237,
+                -3.70251
+            ]
+        },
+        {
+            "Name": "Botica Ecológica",
+            "Address": "Pasaje de La Remonta,4",
+            "Phone": "91458989",
+            "Email": "boticaeco@gmail.com",
+            "geometry": [
+                40.464,
+                -3.69325
+            ]
+        },
+        {
+            "Name": "Mi EcoHerbolario",
+            "Address": "Plaza del 2 de Mayo 5",
+            "Phone": "91567893",
+            "Email": "ecoherbolarioinfo@gmail.com",
+            "geometry": [
+                40.4273,
+                -3.70432
+            ]
+        },
+        {
+            "Name": "NaturHouse",
+            "Address": "Calle del Olvido,21",
+            "Phone": "91352439",
+            "Email": "naturinfo@gmail.com",
+            "geometry": [
+                40.4072,
+                -3.67043
+            ]
+        },
+        {
+            "Name": "Salud Mediterranea",
+            "Address": "Calle del Barquillo,29",
+            "Phone": "618828443",
+            "Email": "saludmediterranea.info@gmail.com",
+            "geometry": [
+                40.423767953977595,
+                -3.6956527775554795
+            ]
+            
+        }
+       
+    ]
+}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './SearchBar.css'
 import iconoSearch from '../../imagenes/Iconosearch.svg'
 import filter from '../../imagenes/maps.svg'
-import { Mapa } from '../Map/Map';
+
 import {useRedirect} from '../../Hooks/useRedirect';
 
 const SearchBar = ({input, setInput}) => {

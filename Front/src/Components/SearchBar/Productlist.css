@@ -67,7 +67,7 @@
     position: relative;
     left:160px;
     top:-125px;
-    max-width: 150px;
+    max-width: 170px;
     font-family: 'Noto Sans', sans-serif;
     font-style: normal;
     font-weight: 900;
@@ -178,27 +178,6 @@
     
 }
 
-#DeleteFav{
-    width: 22px;
-    height: 22px;
-    transform: rotate(45deg);
-    position: relative;
-    z-index: 1;
-    
-    opacity:70%;
-    left:300px;
-    top:0px;
-}
-#price2{
-  
-    font-family: 'Noto Sans', sans-serif;
-    
-    font-weight: 100;
-    font-size: 10px;
-    line-height: 114%;
-    
-    color: #A8A8A8;
-}
 #NumberLikes{
     position: absolute;
     font-family: 'Noto Sans', sans-serif;
@@ -234,4 +213,99 @@
     position:absolute;
     top:-64px;
     margin-left:205px; 
+}
+
+
+/* ////favs/// */
+
+#linea2{
+    position:absolute;
+    margin-top:-0px;
+    margin-left: 4px;
+    max-width: 340px;
+    height: 1px;
+}
+
+#AddFav2{
+    position: absolute;
+    top:-44px;
+    left:160px;
+}
+
+#DeleteFav{
+    position:absolute;
+    width: 22px;
+    height: 22px;
+    transform: rotate(45deg);
+
+    z-index: 1;
+    
+    opacity:70%;
+    left:320px;
+    top:-35px;
+}
+
+#NumberVisitas2{
+    position: absolute;
+    font-family: 'Noto Sans', sans-serif;
+    left:228px;
+    top:-54px;
+    font-weight: 100;
+    font-size: 10px;
+    line-height: 114%;
+    
+    color: #A8A8A8;
+
+}
+#NumberLikes2{
+    position: absolute;
+    font-family: 'Noto Sans', sans-serif;
+    left:176px;
+    top:-54px;
+   
+    font-weight: 100;
+    font-size: 10px;
+    line-height: 114%;
+    
+    color: #A8A8A8;
+
+}
+ #info2{
+     display:flex;
+     flex-direction: column;
+     position:relative;
+     top:-55px;
+ }
+ #visitas2{
+    position:absolute;
+    top:-44px;
+    margin-left:205px;
+
+}
+
+#nameP2{
+    position: relative;
+    left:160px;
+    top:-148px;
+    max-width: 182px;
+    font-family: 'Noto Sans', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 114%;
+    letter-spacing: 0.2px;
+    color: #333333;
+}
+#brand2{
+    position: relative;
+    left:160px;
+    top:-125px;
+    max-width: 170px;
+    font-family: 'Noto Sans', sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 14px;
+    line-height: 114%;
+    letter-spacing: 0.2px;
+    color: #2D6A4F;
 }
