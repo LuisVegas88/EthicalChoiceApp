@@ -49,7 +49,7 @@
   margin-top:-5px;
 }
 .leaflet-pane.leaflet-shadow-pane{
-  display:none
+  opacity:0%;
 }
 #Shop{
   

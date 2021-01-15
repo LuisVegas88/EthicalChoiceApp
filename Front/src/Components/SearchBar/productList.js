@@ -52,7 +52,7 @@ const ProductList = ({search,vegan,eco,cruelty}) => {
                     <p id="NumberLikes">{Math.floor(Math.random()*100) } </p> 
                     <img id="visitas" src={visitas} alt="visitas" ></img> 
                     <p id="NumberVisitas">{Math.floor(Math.random()*100) } </p> 
-                    <img id="linea" src={linea} alt="linea"></img>
+                    {/* <img id="linea" src={linea} alt="linea"></img> */}
                 </div>
               
             </div>  

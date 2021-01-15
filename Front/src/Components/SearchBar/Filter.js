@@ -36,7 +36,7 @@ const Filter = ({vegan,setVegan, eco, setEco, cruelty, setCruelty}) =>{
             <div id ="textFilters">
                 <p id="vt">Vegan</p>
                 <p id="et">Eco</p>
-                <p id="ct">Cruelty</p> 
+                <p id="ct">Cruelty-free</p> 
             </div>     
         </div>
         

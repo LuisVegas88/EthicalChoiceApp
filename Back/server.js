@@ -96,6 +96,7 @@ server.get("/loginG", async (req, res) => {
 										"role": "User",
 										"ip": req.ip
 									};
+									connection.end();
 									res.cookie("jwt", JWT.generateJWT(Payload), options).redirect("http://localhost:3000/profile");
 								});
 							});
@@ -112,7 +113,6 @@ server.get("/loginG", async (req, res) => {
 							res.cookie("jwt", JWT.generateJWT(Payload), options).redirect("http://localhost:3000/profile");
 						}
 					})
-				connection.end();
 				}
 				
 			}
