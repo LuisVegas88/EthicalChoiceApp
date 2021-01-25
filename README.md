@@ -9,7 +9,6 @@ Dentro de estos parámetros, Ethical Choice, se centra en la **trazabilidad de p
 Si quieres ver la aplicación en funcionamiento pulsa [aquí.](https://drive.google.com/file/d/1aPn7sLaIE_kATz-svre4xvuJvIvDDwO5/view?usp=sharing)
 
 
-
 # Grupo
 
 Cada grupo está formado por alumnos de los diferentes Bootcamps de The Bridge. 
