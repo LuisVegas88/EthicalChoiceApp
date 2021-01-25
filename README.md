@@ -4,7 +4,10 @@ Bienvenido al repositorio de Ethical Choice.
 Esta aplicación web nace en el Reto de Tripulaciones llevado a cabo por los alumnos de
 The Bridge de la promoción de Septiembre 2020. El reto proponía la creación de una aplicación web enmarcada en la **trazabilidad de productos**. 
 
-Dentro de estos parámetros, Ethical Choice, se centra en la **trazabilidad de productos cosméticos** que cumplan con uno (o varios) de estos criterios: vegano, cruelty-free o eco. 
+Dentro de estos parámetros, Ethical Choice, se centra en la **trazabilidad de productos cosméticos** que cumplan con uno (o varios) de estos criterios: vegano, cruelty-free o eco.
+
+Si quieres ver la aplicación en funcionamiento pulsa [aquí.](https://drive.google.com/file/d/1efoCRB1lzYwWuFLCUW6IJJLtP9kB7QBk/view?usp=sharing)
+
 
 
 # Grupo
