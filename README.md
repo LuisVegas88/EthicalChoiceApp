@@ -6,7 +6,7 @@ The Bridge de la promoción de Septiembre 2020. El reto proponía la creación d
 
 Dentro de estos parámetros, Ethical Choice, se centra en la **trazabilidad de productos cosméticos** que cumplan con uno (o varios) de estos criterios: vegano, cruelty-free o eco.
 
-Si quieres ver la aplicación en funcionamiento pulsa [aquí.](https://drive.google.com/file/d/1efoCRB1lzYwWuFLCUW6IJJLtP9kB7QBk/view?usp=sharing)
+Si quieres ver la aplicación en funcionamiento pulsa [aquí.](https://drive.google.com/file/d/1aPn7sLaIE_kATz-svre4xvuJvIvDDwO5/view?usp=sharing)
 
 
 
