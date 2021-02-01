@@ -25,10 +25,11 @@
     display:flex;
     flex-direction: column;
     left:155px;
-    top:-156px;  
+    top:-154px;  
 }
 .edit2{
-    margin-top: 26px;
+    margin-top: 29px;
+    height:15px;
 }
 
 #FotoPerfil{
